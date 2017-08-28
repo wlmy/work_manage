@@ -131,14 +131,18 @@
                 <div class="form-group">
                     <label for="img">图片</label>
                     <span id="error-message"></span>
-                    <div id="filePicker" class="btn btn-success" >选择</div>
-                    <button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传图片</button>
+                    {{--<div id="filePicker" class="btn btn-success" >选择</div>--}}
+                    {{--<button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传图片</button>--}}
+                    <label class="btn btn-success" for="saveImage" style="color:#fff">上传文件</label>
+                    <input type="file" id="saveImage"  name="saveImage" accept="image/*" style="position:absolute;clip:rect(0 0 0 0);">
                 </div>
                 <div class="form-group">
                     <label for="img">附件</label>
                     <span id="error-message"></span>
-                    <div id="filePicker" class="btn btn-success" >选择</div>
-                    <button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传附件</button>
+                    {{--<div id="filePicker" class="btn btn-success" >选择</div>--}}
+                    {{--<button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传附件</button>--}}
+                    <label class="btn btn-success" for="saveFile" style="color:#fff">上传文件</label>
+                    <input type="file" id="saveFile"  name="saveFile" accept="text/plain,application/vnd.ms-excel,application/msword" style="position:absolute;clip:rect(0 0 0 0);">
                 </div>
                 <div class="form-group">
                     <label for="sendToWho">发给谁</label><strong class="text-danger">*</strong>
