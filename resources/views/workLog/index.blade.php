@@ -1,6 +1,10 @@
 @extends('member')
 @section('title')看日志@endsection
+@section('styles')
+    <link href="{{asset('static/log/write.css')}}" rel="stylesheet">
+@endsection
 @section('scripts')
+    <script type="text/javascript" src="{{asset('static/bootstrap/js/bootstrap-datetimepicker.js')}}"></script>
     <script type="text/javascript">
         $(function () {
             $(".delete-item").on("click",function () {
@@ -15,6 +19,12 @@
                     $btn.button('reset');
                 });
             }) ;
+
+            $(".form_datetime").datetimepicker({
+                format: "yyyy-mm-dd  hh:ii",
+                linkField: "mirror_field",
+                linkFormat: "yyyy-mm-dd hh:ii"
+            });
         });
     </script>
 @endsection
@@ -22,28 +32,39 @@
     <div class="setting-box">
         <div class="box-head">
             <h4>看日志</h4>
-            <a href="{{route('workLog.write')}}" class="btn btn-success btn-sm pull-right" style="margin-top: 10px;">
+            <a href="{{route('workLog.add')}}" class="btn btn-sm pull-right" style="background:#00a0e9;color:#fff;margin-top: 10px;">
                 写日志
             </a>
         </div>
 
-        <div class="box-body">
-            <div>
-                <span>日志类型：</span>
-                <div><span style="width: 85px;">全部</span>
-                    <ul style="position: absolute; top: 26px; display: none; z-index: 9999; left: -1px;">
-                        <li data-value="0" class="selected">全部</li>
-                        <li data-value="4">月计划</li>
-                        <li data-value="5">周计划</li>
-                    </ul>
+        <div class="table-bar">
+            <div class="search-form fr cf">
+                <label class="type">日志类型：</label>
+                <div class="sleft">
+                    <select name="group" style="border:none; padding:4px; margin:0;">
+                        <option value="-1">全部</option>
+                        <option value="0">日报</option>
+                        <option value="1">周报</option>
+                        <option value="2">月报</option>
+                        <option value="3">年计划</option>
+                    </select>
                 </div>
-                <span>统计时间：</span>
-                <div>
-				<input readonly="" placeholder="开始时间">
+
+
+                <label class="type">选择日期：</label>
+                <div class="sleft">
+                    <input class="form_datetime" size="20" type="text" value="" readonly >
+                    <span class="add-on"><i class="icon-th"></i></span>
+                    至
+                    <input class="form_datetime" size="20" type="text" value="" readonly>
+                    <span class="add-on"><i class="icon-th"></i></span>
                 </div>
-                <div>
-				<input readonly="" placeholder="结束时间">
-                </div>
+
+                <label class="type">姓名：</label>
+                <div class="sleft">
+                    <input type="hidden" name="group_id" value="0">
+                    <input type="text" placeholder="请输入用户姓名" value="" class="search-input" name="nickname">
+                    <a url="" id="search" href="javascript:;" class="sch-btn"><i class="btn-search"></i></a> </div>
             </div>
         </div>
         <div class="box-body" style="padding-right: 0">
@@ -60,28 +81,32 @@
                     </tr>
                     </thead>
                     <tbody>
-
-                        <tr>
-                            <td colspan="6"></td>
-                        </tr>
-
-
+                    @foreach($lists as $item)
                             <tr>
-                                <td>e</td>
-                                <td>e</td>
-                                <td>w</td>
-                                <td>e</td>
+                                <td>{{$item->id}}</td>
+                                <td>{{$item->account}}</td>
+                                <td>
+                                    @if($item->log_type == 0)
+                                        日报
+                                    @elseif($item->log_type == 1)
+                                        周报
+                                    @elseif($item->log_type == 2)
+                                        月报
+                                    @elseif($item->log_type == 3)
+                                        年计划
+                                    @endif
+                                </td>
+                                <td>{{$item->create_time}}</td>
+                                <td>{{$item->update_time}}</td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-sm delete-item" data-id="33"  data-loading-text="删除中...">
                                         删除
                                     </button>
-                                    <a href="" class="btn btn-sm btn-default">编辑</a>
-                                    <a href="" class="btn btn-sm btn-default">详情</a>
+                                    <a href="{{route('workLog.edit',['id'=>$item->id])}}" class="btn btn-sm btn-default">编辑</a>
+                                    <a href="{{route('workLog.detail',['id'=>$item->id])}}" class="btn btn-sm btn-default">详情</a>
                                 </td>
                             </tr>
-
-
-
+                    @endforeach
                     </tbody>
                 </table>
             </div>

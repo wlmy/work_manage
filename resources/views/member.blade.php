@@ -67,7 +67,7 @@
                     <li{!! (isset($member_setting) ? ' class="active"' : '') !!}><a href="{{route('member.setting')}}" class="item"><i class="fa fa-gear"></i> 网站常量</a> </li>
                     <li{!! (isset($setting_site) ? ' class="active"' : '') !!}><a href="{{route('setting.site')}}" class="item"><i class="fa fa-cogs"></i> 网站设置</a> </li>
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('member.users')}}" class="item"><i class="fa fa-group"></i> 用户管理</a> </li>
-                    <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.write')}}" class="item"><i class="fa fa-group"></i> 写日志</a> </li>
+                    <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item"><i class="fa fa-group"></i> 写日志</a> </li>
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"><i class="fa fa-group"></i> 看日志</a> </li>
                 @endif
             </ul>
