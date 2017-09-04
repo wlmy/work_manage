@@ -38,7 +38,7 @@
             <h4>写日志</h4>
         </div>
         <div class="box-body">
-            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.create')}}" id="account-form">
+            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.createOrUpdateData')}}" id="account-form">
                 <div class="form-group">
                     <label for="log">日志类型：</label>
                     <label>

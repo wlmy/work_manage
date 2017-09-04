@@ -128,7 +128,7 @@
             <h4>修改日志</h4>
         </div>
         <div class="box-body">
-            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.create')}}"
+            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.createOrUpdateData')}}"
                   id="log-form">
                 <input type="hidden" class="form-control" name="log_id" maxlength="20" placeholder=""
                        value="{{$log->id}}">

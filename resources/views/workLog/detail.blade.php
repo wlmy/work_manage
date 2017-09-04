@@ -36,7 +36,7 @@
             <h4>查看日志</h4>
         </div>
         <div class="box-body">
-            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.create')}}" id="account-form">
+            <form role="form" class="form-horizontal col-sm-5" method="post" action="" id="account-form">
                 <input type="hidden" class="form-control" name="log_id"  maxlength="20" placeholder="" value="{{$log->id}}">
                 <div class="form-group">
                     <label for="log">日志类型：</label>

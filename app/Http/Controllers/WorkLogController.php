@@ -8,8 +8,6 @@
 
 namespace SmartWiki\Http\Controllers;
 
-
-use Illuminate\Support\Facades\DB;
 use SmartWiki\workLog;
 
 class WorkLogController extends Controller
@@ -20,7 +18,7 @@ class WorkLogController extends Controller
         return view('workLog.add', $this->data);
     }
 
-    public function create()
+    public function createOrUpdateData()
     {
         if ($this->isPost()) {
             $logType = intval($this->request->input('logType', 0));
@@ -101,17 +99,33 @@ class WorkLogController extends Controller
 
     public function index()
     {
+        $group = intval($this->request->input('group'));
+        $start_time = intval($this->request->input('start_time'));
+        $end_time = intval($this->request->input('end_time'));
+        $nickname = intval($this->request->input('nickname'));
+
         $page = max(intval($this->request->input('page', 1)), 1);
-        $log = workLog::select([
+        $select = workLog::select([
             'work_log.id',
             'work_log.log_type',
             'work_log.create_time',
             'work_log.update_time',
             'member.account'
-        ])
-            ->leftJoin('member', 'member.member_id', '=', 'work_log.member_id')
-            ->orderBy('work_log.create_time', 'ASC')->paginate(20, '*', 'page', $page);
-        $this->data['lists'] = $log;
+        ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
+        if (!empty($group)) {
+            $select->where('work_log.log_type', '=', $group);
+        }
+        if (!empty($start_time)) {
+            $select->where('work_log.create_time', '>', $start_time . '00:00:00');
+        }
+        if (!empty($end_time)) {
+            $select->where('work_log.create_time', '=', $end_time . '23:59:59');
+        }
+        if (!empty($nickname)) {
+            $select->where('member.account', 'like', '%' . $nickname . '%');
+        }
+        $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(20, '*', 'page', $page);
+        $this->data['lists'] = $lists;
         return view('workLog.index', $this->data);
     }
 
@@ -129,6 +143,25 @@ class WorkLogController extends Controller
             abort(404);
         }
         return view('workLog.detail', $this->data);
+    }
+
+
+    public function delete($id = null)
+    {
+        $log_id = intval($id);
+
+        if (empty($log_id) or $log_id <= 0) {
+            return $this->jsonResult(40506);
+        }
+        $workLog = workLog::find($log_id);
+        if (empty($workLog)) {
+            abort(404);
+        }
+        $workLog->status = 1;
+        if ($workLog->save() == false) {
+            return $this->jsonResult(500);
+        }
+        return $this->jsonResult(0, ['state' => $workLog->state]);
     }
 
 

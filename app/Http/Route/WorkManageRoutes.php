@@ -5,16 +5,19 @@ Route::match(['get','post'],'/work/add',[
     'uses' => 'WorkLogController@add'
 ])->name('workLog.add');
 
-Route::match(['get','post'],'/work/create',[
-    'uses' => 'WorkLogController@create'
-])->name('workLog.create');
-
 Route::match(['get','post'],'/work/edit',[
     'uses' => 'WorkLogController@edit'
 ])->name('workLog.edit');
+Route::match(['get','post'],'/work/delete/{id?}',[
+    'uses' => 'WorkLogController@delete'
+])->name('workLog.delete');
 Route::match(['get','post'],'/work/detail',[
     'uses' => 'WorkLogController@detail'
 ])->name('workLog.detail');
+
+Route::match(['get','post'],'/work/createOrUpdateData',[
+    'uses' => 'WorkLogController@createOrUpdateData'
+])->name('workLog.createOrUpdateData');
 
 
 //看日志
