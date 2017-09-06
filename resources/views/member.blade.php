@@ -23,9 +23,9 @@
 <body>
 <div class="manual-reader">
 <header class="navbar navbar-static-top smart-nav navbar-fixed-top" role="banner">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
-            <a href="{{route('home.index')}}" class="navbar-brand">日志管理</a>
+            <a href="{{route('home.index')}}" class="navbar-brand">微博日志</a>
             <div class="btn-group dropdown-menu-right pull-right slidebar">
                 <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-align-justify"></i></button>
                 <ul class="dropdown-menu" role="menu">
@@ -56,12 +56,12 @@
         </nav>
     </div>
 </header>
-<div class="container smart-container member">
+<div class="container-fluid smart-container member">
     <div class="row">
         <div class="page-left">
             <ul class="menu">
-                <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item"><i class="fa fa-group"></i> 写日志</a> </li>
-                <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"><i class="fa fa-group"></i> 看日志</a> </li>
+                <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item" ><i class="fa fa-group"></i> 写日志</a> </li>
+                <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item" ><i class="fa fa-group"></i> 看日志</a> </li>
                {{-- <li{!! (isset($member_index) ? ' class="active"' : '') !!}><a href="{{route('member.index')}}" class="item"><i class="fa fa-user"></i> 个人资料</a> </li>
                 <li{!! (isset($member_account) ? ' class="active"' : '') !!}><a href="{{route('member.account')}}" class="item"><i class="fa fa-lock"></i> 修改密码</a> </li>
                 <li{!! (isset($member_projects) ? ' class="active"' : '') !!}><a href="{{route('member.projects')}}" class="item"><i class="fa fa-sitemap"></i> 项目列表</a> </li>
@@ -80,20 +80,6 @@
     </div>
     <div class="clearfix"></div>
 </div>
-<footer class="member-footer">
-    <div class="container">
-        <div class="row text-center">
-            <ul>
-                <li><a href="https://www.iminho.me">SmartWiki</a></li>
-                <li>&nbsp;·&nbsp;</li>
-                <li><a href="https://github.com/lifei6671/SmartWiki/issues" target="_blank">意见反馈</a> </li>
-                <li>&nbsp;·&nbsp;</li>
-                <li><a href="https://github.com/lifei6671/SmartWiki">Github</a> </li>
-            </ul>
-
-        </div>
-    </div>
-</footer>
 </div>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="{{asset('static/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>

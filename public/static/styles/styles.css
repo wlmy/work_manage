@@ -225,7 +225,8 @@ body {
 }
 .member .page-left .menu li {
     height: 36px;
-    line-height: 0
+    line-height: 0;
+    list-style: none;
 }
 .member .page-left .menu .item {
     display: block;

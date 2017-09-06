@@ -25,7 +25,7 @@
 <header class="navbar navbar-static-top smart-nav navbar-fixed-top" role="banner">
     <div class="container">
         <div class="navbar-header">
-            <a href="{{route('home.index')}}" class="navbar-brand"> {{wiki_config('SITE_NAME','SmartWiki')}}</a>
+            <a href="{{route('home.index')}}" class="navbar-brand"> 海风教育应用</a>
         </div>
     </div>
 </header>
@@ -75,7 +75,6 @@
     </div>
     <div class="clearfix"></div>
 </div>
-@include('widget.footer')
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="{{asset('static/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>
 <script type="text/javascript" src="{{asset('static/layer/layer.js')}}"></script>
@@ -130,7 +129,7 @@ $(function () {
                        $("#code").val('');
                        layer.msg(res.message);
                    }else{
-                       window.location = "/";
+                       window.location = "/work/add";
                    }
                    $btn.button('reset');
                },

@@ -2,357 +2,265 @@
 @section('title')写日志@endsection
 @section('styles')
     <link href="{{asset('static/log/write.css')}}" rel="stylesheet">
-    <link href="{{asset('static/webuploader/webuploader.css')}}" rel="stylesheet">
-    <link href="{{asset('static/cropper/cropper.css')}}" rel="stylesheet">
-    <style type="text/css">
-        #upload-logo-panel .wraper{
-            float: left;
-            background: #f6f6f6;
-            position: relative;
-            width: 360px;
-            height: 360px;
-            overflow: hidden;
-        }
-        #upload-logo-panel .watch-crop-list{
-            width: 170px;
-            padding:10px 20px;
-            margin-left: 10px;
-            background-color: #f6f6f6;
-            text-align: center;
-            float: right;
-            height: 360px;
-        }
-        #image-wraper{
-            text-align: center;
-        }
-        .webuploader-pick{
+    <link href="{{asset('static/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
-        }
-        .webuploader-pick-hover{
 
-        }
-        .webuploader-container{
-            padding: 0;
-            border: 0;
-            height: 40px;
-        }
-        .watch-crop-list>ul{
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .webuploader-container div{
-            width: 77px !important;
-            height: 40px !important;
-            left: 0 !important;
-        }
-        .img-preview {
-            margin: 5px auto 10px auto;
-            text-align: center;
-            overflow: hidden;
-        }
-        .img-preview > img {
-            max-width: 100%;
-        }
-        .preview-lg{
-            width: 120px;
-            height: 120px;
-        }
-        .preview-sm{
-            width: 60px;
-            height: 60px;
-        }
-        #error-message{
-            font-size: 13px;
-            color: red;
-            vertical-align: middle;
-            margin-top: -10px;
-            display: inline-block;
-            height: 40px;
-        }
-    </style>
+    <link href="{{asset('static/bootstrap-wysiwyg/css/index.css')}}" rel="stylesheet">
+    <link rel="apple-touch-icon" href="//mindmup.s3.amazonaws.com/lib/img/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="http://mindmup.s3.amazonaws.com/lib/img/favicon.ico" >
+    <link href="{{asset('static/bootstrap-wysiwyg/external/google-code-prettify/prettify.css')}}" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+
 @endsection
 @section('scripts')
-<script type="text/javascript" src="/static/cropper/cropper.js"></script>
-<script type="text/javascript" src="/static/webuploader/webuploader.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("input[type='radio']").click(function () {
-            var radio_val = $("input[type='radio']:checked").val();
-            if (radio_val === '0') {
-                $("#daily").show();
-            }else{
-                $("#daily").hide();
-            }
-
-            if (radio_val === '1') {
-                $("#week").show();
-            }else{
-                $("#week").hide();
-            }
-
-            if (radio_val === '2') {
-                $("#month").show();
-            }else{
-                $("#month").hide();
-            }
-
-            if (radio_val === '3') {
-                $("#year").show();
-            }else{
-                $("#year").hide();
-            }
-        });
-    });
-
-
-    $(function () {
-        var modalHtml = $("#upload-logo-panel").find(".modal-body").html();
-
-        $("#upload-logo-panel").on("hidden.bs.modal",function () {
-            $("#upload-logo-panel").find(".modal-body").html(modalHtml);
-        });
-
-        $("#basic-form").ajaxForm({
-            beforeSubmit : function () {
-
-                var email = $.trim($("#user-email").val());
-                if(!email){
-                    return showError('邮箱不能为空');
+    <script src="{{asset('static/bootstrap-wysiwyg/js/bootstrap-wysiwyg.js')}}"></script>
+    <script src="{{asset('static/bootstrap-wysiwyg/external/jquery.hotkeys.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[type='radio']").click(function () {
+                var radio_val = $("input[type='radio']:checked").val();
+                if (radio_val === '0') {
+                    $("#daily").show();
+                } else {
+                    $("#daily").hide();
                 }
 
-            },
-            success : function (res) {
-                if(res.errcode == 0){
-                    showSuccess("保存成功");
-                }else{
-                    showError(res.message);
-                }
-            }
-        });
-    });
-    try {
-        var uploader = WebUploader.create({
-            auto: false,
-            swf: '/static/webuploader/Uploader.swf',
-            server: '{{route('member.upload')}}',
-            pick: "#filePicker",
-            fileVal : "image-file",
-            fileNumLimit : 1,
-            compress : false,
-            accept: {
-                title: 'Images',
-                extensions: 'jpg,jpeg,png',
-                mimeTypes: 'image/jpg,image/jpeg,image/png'
-            }
-        }).on("beforeFileQueued",function (file) {
-            uploader.reset();
-        }).on( 'fileQueued', function( file ) {
-            uploader.makeThumb( file, function( error, src ) {
-                $img = '<img src="' + src +'" style="max-width: 360px;max-height: 360px;">';
-                if ( error ) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
+                if (radio_val === '1') {
+                    $("#week").show();
+                } else {
+                    $("#week").hide();
                 }
 
-                $("#image-wraper").html($img);
-                window.ImageCropper = $('#image-wraper>img').cropper({
-                    aspectRatio: 1 / 1,
-                    dragMode : 'move',
-                    viewMode : 1,
-                    preview : ".img-preview"
+                if (radio_val === '2') {
+                    $("#month").show();
+                } else {
+                    $("#month").hide();
+                }
+
+                if (radio_val === '3') {
+                    $("#year").show();
+                } else {
+                    $("#year").hide();
+                }
+            });
+        });
+
+
+        /*$(function () {
+            $(".btn-submit").submit(
+                function () {
+                    $()
+
+                }
+            );
+
+        });*/
+
+        $(function(){
+
+            function initToolbarBootstrapBindings() {
+                var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+                        'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+                        'Times New Roman', 'Verdana'],
+                    fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+                $.each(fonts, function (idx, fontName) {
+                    fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
                 });
-            }, 1, 1 );
-        }).on("uploadError",function (file,reason) {
-            console.log(reason);
-            $("#error-message").text("上传失败:" + reason);
+                $('a[title]').tooltip({container:'body'});
+                $('.dropdown-menu input').click(function() {return false;})
+                    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+                    .keydown('esc', function () {this.value='';$(this).change();});
 
-        }).on("uploadSuccess",function (file, res) {
+                $('[data-role=magic-overlay]').each(function () {
+                    var overlay = $(this), target = $(overlay.data('target'));
+                    overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+                });
+                if ("onwebkitspeechchange"  in document.createElement("input")) {
+                    var editorOffset = $('#editor').offset();
+                    $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+                } else {
+                    $('#voiceBtn').hide();
+                }
+            };
+            function showErrorAlert (reason, detail) {
+                var msg='';
+                if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+                else {
+                    console.log("error uploading file", reason, detail);
+                }
+                $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+
+                    '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+            };
+            initToolbarBootstrapBindings();
+            $('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+            $('#editor').change(function () {
+                $('#editor_content').val('eeeeeeeeeeee');
+            });
 
-            if(res.success == 1){
-                console.log(res);
-                $("#upload-logo-panel").modal('hide');
-                $("#headimgurl").attr('src',res.url);
-                $("input[name='imgUrl']").val(res.url);
-            }else{
-                $("#error-message").text(res.message);
-            }
-        }).on("beforeFileQueued",function (file) {
-            if(file.size > 1024*1024*2){
-                uploader.removeFile(file);
-                uploader.reset();
-                alert("文件必须小于2MB");
-                return false;
-            }
-        }).on("uploadComplete",function () {
-            $("#saveImage").button('reset');
         });
-        $("#saveImage").on("click",function () {
-            var files = uploader.getFiles();
-            if(files.length > 0) {
-                $("#saveImage").button('loading');
-                var cropper = window.ImageCropper.cropper("getData");
-
-                uploader.option("formData", cropper);
-
-                uploader.upload();
-            }else{
-                alert("请选择图片");
-            }
-        });
-    }catch(e){
-        console.log(e);
-    }
-</script>
+    </script>
 @endsection
 @section('content')
-    <div class="member-box">
+    <div class="setting-box">
         <div class="box-head">
             <h4>写日志</h4>
         </div>
-        <div class="box-body">
-            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.createOrUpdateData')}}" id="account-form">
-                <div class="form-group" style="margin-right: -150px">
-                    <label style="margin-right: 15px;">
-                        <li style="list-style: none"><img src="/static/images/log/ri.png" style="width: 80px;height: 80px"/></li>
-                        <li style="list-style: none"><input type="radio" name="workLogType" value="0" checked="">日报</li>
-                    </label>
-                    <label style="margin-right: 15px;">
-                        <li style="list-style: none"><img src="/static/images/log/zhou.png" style="width: 80px;height: 80px"/></li>
-                        <li style="list-style: none"><input type="radio" name="workLogType" value="1">周报</li>
-                    </label>&nbsp;&nbsp;
-                    <label style="margin-right: 15px;">
-                        <li style="list-style: none"><img src="/static/images/log/yue.png" style="width: 80px;height: 80px"/></li>
-                        <li style="list-style: none"><input type="radio" name="workLogType" value="2">月报</li>
-                    </label>&nbsp;&nbsp;
-                    <label style="margin-right: 15px;">
-                        <li style="list-style: none"><img src="/static/images/log/nian.png" style="width: 80px;height: 80px"/></li>
-                        <li style="list-style: none"><input type="radio" name="workLogType" value="3">年计划</li>
-                    </label>
+        <div class="box-data">
+            <form role="form" class="add_form" method="post"
+                  action="{{route('workLog.createOrUpdateData')}}" id="account-form">
+                <div class="log-type">
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/ri.png"/></div>
+                        <div><input type="radio" name="workLogType" value="0" checked="">日报</div>
+                    </div>
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/zhou.png"/></div>
+                        <div><input type="radio" name="workLogType" value="1">周报</div>
+                    </div>
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/yue.png"/></div>
+                        <div><input type="radio" name="workLogType" value="2">月报</div>
+                    </div>
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/nian.png"/></div>
+                        <div><input type="radio" name="workLogType" value="3">年计划</div>
+                    </div>
                 </div>
                 <div id="daily">
-                    <div class="form-group">
-                        <label for="todayFinished">今日完成工作</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="todayFinished" id="todayFinished" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>今日完成工作<span id="necessary">*</span></p>
+                        <textarea type="text"  name="todayFinished" id="todayFinished" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="todayUnFinished">未完成工作</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="todayUnFinished" id="todayUnFinished" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>未完成工作<span>*</span></p>
+                        <textarea type="text"  name="todayUnFinished" id="todayUnFinished" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="todayConcerted">需协调工作</label>
-                        <input type="text" class="form-control" name="todayConcerted" id="todayConcerted" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>需协调工作</p>
+                        <textarea type="text"  name="todayConcerted" id="todayConcerted" maxlength="20"  placeholder=""></textarea>
                     </div>
                 </div>
 
 
                 <div id="week" hidden>
-                    <div class="form-group">
-                        <label for="weekFinished">本周完成工作</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="weekFinished" id="weekFinished" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>本周完成工作<span>*</span></p>
+                        <textarea type="text"  name="weekFinished" id="weekFinished" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="weekSummary">本周工作总结</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="weekSummary" id="weekSummary" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>本周工作总结<span>*</span></p>
+                        <textarea type="text"  name="weekSummary" id="weekSummary" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="nextWeekPlan">下周工作计划</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="nextWeekPlan" id="nextWeekPlan" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>下周工作计划<span>*</span></p>
+                        <textarea type="text"  name="nextWeekPlan" id="nextWeekPlan" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="weekConcerted">需协调与帮助</label>
-                        <input type="text" class="form-control" name="weekConcerted" id="weekConcerted" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>需协调与帮助</p>
+                        <textarea type="text"  name="weekConcerted" id="weekConcerted" maxlength="20"  placeholder=""></textarea>
                     </div>
                 </div>
 
 
                 <div id="month" hidden>
-                    <div class="form-group">
-                        <label for="monthFinished">本月工作内容</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="monthFinished" id="monthFinished" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>本月工作内容<span>*</span></p>
+                        <textarea type="text"  name="monthFinished" id="monthFinished" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="monthSummary">本月工作总结</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="monthSummary" id="monthSummary" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>本月工作总结<span>*</span></p>
+                        <textarea type="text"  name="monthSummary" id="monthSummary" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="nextMonthPlan">下月工作计划</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="nextMonthPlan" id="nextMonthPlan" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>下月工作计划<span>*</span></p>
+                        <textarea type="text"  name="nextMonthPlan" id="nextMonthPlan" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="monthConcerted">需帮助与支持</label>
-                        <input type="text" class="form-control" name="monthConcerted" id="monthConcerted" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>需帮助与支持<span>*</span></p>
+                        <textarea type="text"  name="monthConcerted" id="monthConcerted" maxlength="20"  placeholder=""></textarea>
                     </div>
                 </div>
 
                 <div id="year" hidden>
-                    <div class="form-group">
-                        <label for="yearTarget">今年目标</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="yearTarget" id="yearTarget" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>今年目标<span>*</span></p>
+                        <textarea type="text"  name="yearTarget" id="yearTarget" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="yearPlan">关键计划</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="yearPlan" id="yearPlan" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>关键计划<span>*</span></p>
+                        <textarea type="text"  name="yearPlan" id="yearPlan" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="yearFinishSituation">完成情况</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="yearFinishSituation" id="yearFinishSituation" maxlength="20" placeholder="" value="">
+                    <div>
+                        <p>完成情况<span>*</span></p>
+                        <textarea type="text"  name="yearFinishSituation" id="yearFinishSituation" maxlength="20"  placeholder=""></textarea>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="remark">备注</label>
-                    <textarea class="form-control" rows="3" title="描述" name="remark" id="remark" maxlength="500"></textarea>
+                <!-- editor-->
+                <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li><li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li><li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li><li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li><li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li><li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li><li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li><li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li><li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li><li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li><li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li><li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li><li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li><li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li><li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                            <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                            <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                        <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                        <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                        <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="insertunorderedlist" title="" data-original-title="Bullet list"><i class="icon-list-ul"></i></a>
+                        <a class="btn" data-edit="insertorderedlist" title="" data-original-title="Number list"><i class="icon-list-ol"></i></a>
+                        <a class="btn" data-edit="outdent" title="" data-original-title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+                        <a class="btn" data-edit="indent" title="" data-original-title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                        <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                        <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                        <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><i class="icon-link"></i></a>
+                        <div class="dropdown-menu input-append">
+                            <input class="span2" placeholder="URL" type="text" data-edit="createLink">
+                            <button class="btn" type="button">Add</button>
+                        </div>
+                        <a class="btn" data-edit="unlink" title="" data-original-title="Remove Hyperlink"><i class="icon-cut"></i></a>
+
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn" title="" id="pictureBtn" data-original-title="Insert picture (or just drag &amp; drop)"><i class="icon-picture"></i></a>
+                        <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 41px; height: 30px;">
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="undo" title="" data-original-title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+                        <a class="btn" data-edit="redo" title="" data-original-title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+                    </div>
+                    <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
                 </div>
-                <div class="form-group">
-                    <label for="img">图片</label>
-                    <label>
-                        <input type="text" hidden name="imgUrl" value="">
-                        <a href="javascript:;" data-toggle="modal" data-target="#upload-logo-panel">
-                            <img src="/static/images/plus.png" onerror="this.src='/static/images/middle.gif'" class="img-circle" alt="图片" style="max-width: 50px;max-height: 50px;" id="headimgurl">
-                        </a>
-                    </label>
+                <div id="editor" contenteditable="true">
                 </div>
-                <div class="form-group">
+                <div>
+                    <textarea type="text"  name="editor_content" id="editor_content" maxlength="20"  placeholder="" hidden>為鵝鵝鵝</textarea>
+                </div>
+
+                <div class="btn-submit">
                     <button type="submit" class="btn btn-success">提交</button>
                     <span id="error-message"></span>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!--附件上传-->
-    <div class="modal fade" id="upload-logo-panel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">图片</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="wraper">
-                        <div id="image-wraper">
-
-                        </div>
-                    </div>
-                    <div class="watch-crop-list">
-                        <div class="preview-title">预览</div>
-                        <ul>
-                            <li>
-                                <div class="img-preview preview-lg"></div>
-                            </li>
-                            <li>
-                                <div class="img-preview preview-sm"></div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div style="clear: both"></div>
-                </div>
-                <div class="modal-footer">
-                    <span id="error-message"></span>
-                    <div id="filePicker" class="btn">选择</div>
-                    <button type="button" id="saveImage" class="btn btn-success" style="height: 40px;width: 77px;" data-loading-text="上传中...">上传</button>
-                </div>
-            </div>
         </div>
     </div>
 @endsection

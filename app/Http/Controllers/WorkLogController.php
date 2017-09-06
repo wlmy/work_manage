@@ -23,6 +23,7 @@ class WorkLogController extends Controller
         if ($this->isPost()) {
             $logType = intval($this->request->input('logType', 0));
             $attachmentUrl = $this->request->input('imgUrl','');
+            $editorContent = $this->request->input('editor_content','');dd($editorContent);
 
             $dailyData = [
                 'today_finished' => $this->request->input('todayFinished'),
@@ -121,9 +122,8 @@ class WorkLogController extends Controller
             $select->where('member.account', 'like', '%' . $nickname . '%');
         }
 
-        $select->where('member.member_id', '=', $member_id);
-        $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(20, '*', 'page', $page);
-        $this->data['lists'] = $lists;
+        $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
+        $this->data['logLists'] = $lists;
         return view('workLog.index', $this->data);
     }
 
