@@ -22,10 +22,7 @@ class WorkLogController extends Controller
     {
         if ($this->isPost()) {
             $logType = intval($this->request->input('logType', 0));
-
-            /*$img = $this->request->input('img');
-            $attachment = $this->request->input('attachment');
-            $sendToWho = $this->request->input('sendToWho');*/
+            $attachmentUrl = $this->request->input('imgUrl','');
 
             $dailyData = [
                 'today_finished' => $this->request->input('todayFinished'),
@@ -56,9 +53,7 @@ class WorkLogController extends Controller
             $requestData = [
                 'member_id' => $this->data['member']['member_id'],
                 'log_type' => empty($logType) ? 0 : $logType,
-                /*'img' => $img,
-                'attachment' => $attachment,
-                'sendToWho' => $sendToWho,*/
+                'attachmentUrl' => $attachmentUrl,
                 'create_time' => date('Y:m:d H:i:s', time()),
                 'update_time' => date('Y:m:d H:i:s', time()),
             ];
@@ -99,20 +94,21 @@ class WorkLogController extends Controller
 
     public function index()
     {
-        $group = intval($this->request->input('group'));
-        $start_time = intval($this->request->input('start_time'));
-        $end_time = intval($this->request->input('end_time'));
-        $nickname = intval($this->request->input('nickname'));
+        $member = $this->data['member'];
+        if (empty($member_id = $member->member_id)) {
+            abort(404);
+        }
+        $group = $this->request->input('group');
+        $start_time = $this->request->input('start_time');
+        $end_time = $this->request->input('end_time');
+        $nickname = $this->request->input('nickname');
 
         $page = max(intval($this->request->input('page', 1)), 1);
         $select = workLog::select([
-            'work_log.id',
-            'work_log.log_type',
-            'work_log.create_time',
-            'work_log.update_time',
+            'work_log.*',
             'member.account'
         ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
-        if (!empty($group)) {
+        if (isset($group) && $group >= 0) {
             $select->where('work_log.log_type', '=', $group);
         }
         if (!empty($start_time)) {
@@ -124,6 +120,8 @@ class WorkLogController extends Controller
         if (!empty($nickname)) {
             $select->where('member.account', 'like', '%' . $nickname . '%');
         }
+
+        $select->where('member.member_id', '=', $member_id);
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(20, '*', 'page', $page);
         $this->data['lists'] = $lists;
         return view('workLog.index', $this->data);

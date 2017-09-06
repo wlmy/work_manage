@@ -33,7 +33,7 @@
 @section('content')
     <div class="member-box">
         <div class="box-head">
-            <h4>查看日志</h4>
+            <h4>查看全文</h4>
         </div>
         <div class="box-body">
             <form role="form" class="form-horizontal col-sm-5" method="post" action="" id="account-form">
@@ -125,24 +125,11 @@
                 </div>
                 <div class="form-group">
                     <label for="img">图片</label>
-                    <span id="error-message"></span>
-                    {{--<div id="filePicker" class="btn btn-success" >选择</div>--}}
-                    {{--<button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传图片</button>--}}
-                    <label class="btn btn-success" for="saveImage" style="color:#fff">上传文件</label>
-                    <input type="file" id="saveImage"  name="saveImage" accept="image/*" style="position:absolute;clip:rect(0 0 0 0);">
-                </div>
-                <div class="form-group">
-                    <label for="img">附件</label>
-                    <span id="error-message"></span>
-                    {{--<div id="filePicker" class="btn btn-success" >选择</div>--}}
-                    {{--<button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传附件</button>--}}
-                    <label class="btn btn-success" for="saveFile" style="color:#fff">上传文件</label>
-                    <input type="file" id="saveFile"  name="saveFile" accept="text/plain,application/vnd.ms-excel,application/msword" style="position:absolute;clip:rect(0 0 0 0);">
-                </div>
-                <div class="form-group">
-                    <label for="sendToWho">发给谁</label><strong class="text-danger">*</strong>
-                    <img src="{{asset('/static/images/plus.jpg')}}" style="width: 10%">&nbsp;添加人员<br>
-                    <img src="{{asset('/static/images/plus.jpg')}}" style="width: 10%;margin-left:55px">&nbsp;添加组
+                    <label>
+                        <a href="javascript:;" data-toggle="modal" data-target="#upload-logo-panel">
+                            <img src="{{$log->attachmentUrl}}" onerror="this.src='/static/images/middle.gif'" class="img-circle" alt="图片" style="max-width: 50px;max-height: 50px;" id="headimgurl">
+                        </a>
+                    </label>
                 </div>
             </form>
         </div>

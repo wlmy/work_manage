@@ -39,87 +39,91 @@
             return true;
         }
 
-        $("#log-form").ajaxForm({
-            beforeSubmit: function () {
-                var $btn = $("button[type='submit']").button('loading');
+        $(function () {
+            $("#log-form").ajaxForm({
+                beforeSubmit: function () {
+                    var $btn = $("button[type='submit']").button('loading');
 
-                if (value === '0') {
-                    var todayFinished = $.trim($("#todayFinished").val());
-                    if (!todayFinished) {
-                        $btn.button('reset');
-                        return showError("今日完成工作不能为空");
+                    if (value === '0') {
+                        var todayFinished = $.trim($("#todayFinished").val());
+                        if (!todayFinished) {
+                            $btn.button('reset');
+                            return showError("今日完成工作不能为空");
+                        }
+                        var todayUnFinished = $.trim($("#todayUnFinished").val());
+                        if (!todayUnFinished) {
+                            $btn.button('reset');
+                            return showError('未完成工作不能为空');
+                        }
                     }
-                    var todayUnFinished = $.trim($("#todayUnFinished").val());
-                    if (!todayUnFinished) {
-                        $btn.button('reset');
-                        return showError('未完成工作不能为空');
-                    }
-                }
 
-                if (value === '1') {
-                    var weekFinished = $.trim($("#weekFinished").val());
-                    if (!weekFinished) {
-                        $btn.button('reset');
-                        return showError("本周完成工作不能为空");
+                    if (value === '1') {
+                        var weekFinished = $.trim($("#weekFinished").val());
+                        if (!weekFinished) {
+                            $btn.button('reset');
+                            return showError("本周完成工作不能为空");
+                        }
+                        var weekSummary = $.trim($("#weekSummary").val());
+                        if (!weekSummary) {
+                            $btn.button('reset');
+                            return showError('本周工作总结不能为空');
+                        }
+                        var nextWeekPlan = $.trim($("#nextWeekPlan").val());
+                        if (!nextWeekPlan) {
+                            $btn.button('reset');
+                            return showError('下周计划不能为空');
+                        }
                     }
-                    var weekSummary = $.trim($("#weekSummary").val());
-                    if (!weekSummary) {
-                        $btn.button('reset');
-                        return showError('本周工作总结不能为空');
-                    }
-                    var nextWeekPlan = $.trim($("#nextWeekPlan").val());
-                    if (!nextWeekPlan) {
-                        $btn.button('reset');
-                        return showError('下周计划不能为空');
-                    }
-                }
 
-                if (value === '2') {
-                    var monthFinished = $.trim($("#monthFinished").val());
-                    if (!monthFinished) {
-                        $btn.button('reset');
-                        return showError("本月工作内容不能为空");
+                    if (value === '2') {
+                        var monthFinished = $.trim($("#monthFinished").val());
+                        if (!monthFinished) {
+                            $btn.button('reset');
+                            return showError("本月工作内容不能为空");
+                        }
+                        var monthSummary = $.trim($("#monthSummary").val());
+                        if (!monthSummary) {
+                            $btn.button('reset');
+                            return showError('本月工作总结不能为空');
+                        }
+                        var nextMonthPlan = $.trim($("#nextMonthPlan").val());
+                        if (!nextMonthPlan) {
+                            $btn.button('reset');
+                            return showError('下月计划不能为空');
+                        }
                     }
-                    var monthSummary = $.trim($("#monthSummary").val());
-                    if (!monthSummary) {
-                        $btn.button('reset');
-                        return showError('本月工作总结不能为空');
-                    }
-                    var nextMonthPlan = $.trim($("#nextMonthPlan").val());
-                    if (!nextMonthPlan) {
-                        $btn.button('reset');
-                        return showError('下月计划不能为空');
-                    }
-                }
 
-                if (value === '3') {
-                    var yearTarget = $.trim($("#yearTarget").val());
-                    if (!yearTarget) {
-                        $btn.button('reset');
-                        return showError("今年目标不能为空");
+                    if (value === '3') {
+                        var yearTarget = $.trim($("#yearTarget").val());
+                        if (!yearTarget) {
+                            $btn.button('reset');
+                            return showError("今年目标不能为空");
+                        }
+                        var yearPlan = $.trim($("#yearPlan").val());
+                        if (!yearPlan) {
+                            $btn.button('reset');
+                            return showError('今年关键计划不能为空');
+                        }
+                        var yearFinishSituation = $.trim($("#yearFinishSituation").val());
+                        if (!yearFinishSituation) {
+                            $btn.button('reset');
+                            return showError('完成情况不能为空');
+                        }
                     }
-                    var yearPlan = $.trim($("#yearPlan").val());
-                    if (!yearPlan) {
-                        $btn.button('reset');
-                        return showError('今年关键计划不能为空');
-                    }
-                    var yearFinishSituation = $.trim($("#yearFinishSituation").val());
-                    if (!yearFinishSituation) {
-                        $btn.button('reset');
-                        return showError('完成情况不能为空');
+                },
+                success: function (res) {
+                    $("button[type='submit']").button('reset');
+                    if (res.errcode == 0) {
+                        showSuccess("保存成功");
+                      //  $("input[name='config_id']").val(res.data.id);
+                    } else {
+                        showError(res.message);
                     }
                 }
-            },
-            success: function (res) {
-                $("button[type='submit']").button('reset');
-                if (res.errcode == 0) {
-                    showSuccess("保存成功");
-                    $("input[name='config_id']").val(res.data.id);
-                } else {
-                    showError(res.message);
-                }
-            }
+            });
+
         });
+
     </script>
 @endsection
 @section('content')
@@ -133,7 +137,7 @@
                 <input type="hidden" class="form-control" name="log_id" maxlength="20" placeholder=""
                        value="{{$log->id}}">
                 <div class="form-group">
-                    <label for="log">日志类型：</label>
+                    <label>日志类型：</label>
                     <label style="color: #2aa198;font-weight:bold;">
                         @if($log->log_type == 0) 日报
                         @elseif($log->log_type == 1) 周报

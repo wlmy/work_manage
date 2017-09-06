@@ -25,7 +25,7 @@
 <header class="navbar navbar-static-top smart-nav navbar-fixed-top" role="banner">
     <div class="container">
         <div class="navbar-header">
-            <a href="{{route('home.index')}}" class="navbar-brand">{{wiki_config('SITE_NAME','SmartWiki')}}</a>
+            <a href="{{route('home.index')}}" class="navbar-brand">日志管理</a>
             <div class="btn-group dropdown-menu-right pull-right slidebar">
                 <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-align-justify"></i></button>
                 <ul class="dropdown-menu" role="menu">
@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('member.index')}}" class="img">
+                    <a href="{{route('workLog.add')}}" class="img">
                         <img src="{{$member->headimgurl}}" class="img-circle" style="width: 43px;">
                     </a>
                 </li>
@@ -60,7 +60,9 @@
     <div class="row">
         <div class="page-left">
             <ul class="menu">
-                <li{!! (isset($member_index) ? ' class="active"' : '') !!}><a href="{{route('member.index')}}" class="item"><i class="fa fa-user"></i> 个人资料</a> </li>
+                <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item"><i class="fa fa-group"></i> 写日志</a> </li>
+                <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"><i class="fa fa-group"></i> 看日志</a> </li>
+               {{-- <li{!! (isset($member_index) ? ' class="active"' : '') !!}><a href="{{route('member.index')}}" class="item"><i class="fa fa-user"></i> 个人资料</a> </li>
                 <li{!! (isset($member_account) ? ' class="active"' : '') !!}><a href="{{route('member.account')}}" class="item"><i class="fa fa-lock"></i> 修改密码</a> </li>
                 <li{!! (isset($member_projects) ? ' class="active"' : '') !!}><a href="{{route('member.projects')}}" class="item"><i class="fa fa-sitemap"></i> 项目列表</a> </li>
                 @if(isset($member->group_level) and $member->group_level === 0)
@@ -69,7 +71,7 @@
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('member.users')}}" class="item"><i class="fa fa-group"></i> 用户管理</a> </li>
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item"><i class="fa fa-group"></i> 写日志</a> </li>
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"><i class="fa fa-group"></i> 看日志</a> </li>
-                @endif
+                @endif--}}
             </ul>
         </div>
         <div class="page-right">
