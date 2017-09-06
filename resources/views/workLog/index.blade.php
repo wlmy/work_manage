@@ -93,14 +93,12 @@
 
                     </div>
                     <div class="nickname">
-                        <p>姓名：</p><input type="text" placeholder="请输入用户姓名"
+                        <span>姓名：</span><input type="text" placeholder="请输入用户姓名"
                                   value="@if(!empty($_REQUEST['nickname'])) {{$_REQUEST['nickname']}} @endif"
                                   class="search-input" name="nickname">
+                            <a url="{{route("workLog.index")}}" id="search" class="sch-btn icon-box btn-search"> </a>
+                    </div>
 
-                    </div>
-                    <div class="icon-box">
-                        <a url="{{route("workLog.index")}}" id="search" class="sch-btn "><i class="btn-search"></i></a>
-                    </div>
                 </div>
                 <div class="two-row">
                     <p>按时间段：</p>

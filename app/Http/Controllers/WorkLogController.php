@@ -95,10 +95,6 @@ class WorkLogController extends Controller
 
     public function index()
     {
-        $member = $this->data['member'];
-        if (empty($member_id = $member->member_id)) {
-            abort(404);
-        }
         $group = $this->request->input('group');
         $start_time = $this->request->input('start_time');
         $end_time = $this->request->input('end_time');
@@ -121,7 +117,6 @@ class WorkLogController extends Controller
         if (!empty($nickname)) {
             $select->where('member.account', 'like', '%' . $nickname . '%');
         }
-
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
         $this->data['logLists'] = $lists;
         return view('workLog.index', $this->data);

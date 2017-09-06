@@ -9,8 +9,9 @@
 }
 .nickname{
     display: inline-block;
-    width: 300px;
+    width: 260px;
 }
+
 .first-row{
     margin-top: 10px;
 }
@@ -35,6 +36,8 @@ p{
 }
 
 .btn-search {
+    cursor: pointer;
+    float: right;
     display: inline-block;
     margin-top: 5px;
     width: 25px;
@@ -68,7 +71,7 @@ p{
 
 .log-user {
     width: 100%;
-    height: auto;
+    height: 60px;
     padding: 0px;
     margin: 0px;
 
@@ -83,21 +86,22 @@ p{
 }
 
 .pic-box {
+    float: left;
     display: inline-block;
     width: 70px;
-    height: 70px;
 }
 
 .name-date {
+    float: left;
+    line-height: 30px;
     display: inline-block;
     width: 200px;
-    height: 70px;
 }
 
 .btn-box {
+    float: left;
     display: inline-block;
     width: 200px;
-    height: 70px;
 }
 
 .list-name {

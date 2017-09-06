@@ -8,9 +8,9 @@
     <link href="{{asset('static/bootstrap-wysiwyg/css/index.css')}}" rel="stylesheet">
     <link rel="apple-touch-icon" href="//mindmup.s3.amazonaws.com/lib/img/apple-touch-icon.png" />
     <link rel="shortcut icon" href="http://mindmup.s3.amazonaws.com/lib/img/favicon.ico" >
-    <link href="{{asset('static/bootstrap-wysiwyg/external/google-code-prettify/prettify.css')}}" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+{{--    <link href="{{asset('static/bootstrap-wysiwyg/external/google-code-prettify/prettify.css')}}" rel="stylesheet">--}}
+    {{--<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">--}}
+    {{--<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">--}}
     <link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 
 @endsection
@@ -95,9 +95,10 @@
             };
             initToolbarBootstrapBindings();
             $('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
-            $('#editor').change(function () {
-                $('#editor_content').val('eeeeeeeeeeee');
-            });
+            $('#submit').on('click',function(){
+                $('#editor_content').val($('#editor').html())
+                $('#account-form').submit();
+            })
 
         });
     </script>
@@ -253,11 +254,11 @@
                 <div id="editor" contenteditable="true">
                 </div>
                 <div>
-                    <textarea type="text"  name="editor_content" id="editor_content" maxlength="20"  placeholder="" hidden>為鵝鵝鵝</textarea>
+                    <textarea type="text"  name="editor_content" id="editor_content" maxlength="20"  placeholder="" hidden></textarea>
                 </div>
 
                 <div class="btn-submit">
-                    <button type="submit" class="btn btn-success">提交</button>
+                    <button id="submit" class="btn btn-success">提交</button>
                     <span id="error-message"></span>
                 </div>
             </form>
