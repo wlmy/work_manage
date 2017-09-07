@@ -146,7 +146,7 @@ class Member extends ModelBase
         if ($userInfo['count'] == 0) {
             $member = Member::where('account', '=', $account)->where('state', '=', 0)->take(1)->first();
             if (empty($member) || password_verify($password, $member->member_passwd) === false) {
-                throw new DataNullException('账户密码错误', 40403);
+                throw new DataNullException('账户密码错误', 40401);
             }
         } else {
             $uid = $userInfo[0]['uid'][0];
@@ -154,7 +154,7 @@ class Member extends ModelBase
             try {
                 $ldap->bind($userName, $password);
             } catch (\Exception $e) {
-                throw new DataNullException("ldap验证账号或密码错误", 40402);
+                throw new \Exception("ldap验证账号或密码错误");
             }
             $userAccount = $userInfo[0]['cn'][0];
             $member = Member::where('account', '=', $userAccount)->where('state', '=', 0)->take(1)->first();
