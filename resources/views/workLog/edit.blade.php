@@ -1,267 +1,259 @@
 @extends('member')
-@section('title')修改日志@endsection
+@section('title')写日志@endsection
+@section('styles')
+    <link href="{{asset('static/log/write.css')}}" rel="stylesheet">
+    <link href="{{asset('static/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+
+    <link href="{{asset('static/bootstrap-wysiwyg/css/index.css')}}" rel="stylesheet">
+    <link rel="apple-touch-icon" href="//mindmup.s3.amazonaws.com/lib/img/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="http://mindmup.s3.amazonaws.com/lib/img/favicon.ico" >
+{{--    <link href="{{asset('static/bootstrap-wysiwyg/external/google-code-prettify/prettify.css')}}" rel="stylesheet">--}}
+    {{--<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">--}}
+    {{--<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">--}}
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+
+@endsection
 @section('scripts')
+    <script src="{{asset('static/bootstrap-wysiwyg/js/bootstrap-wysiwyg.js')}}"></script>
+    <script src="{{asset('static/bootstrap-wysiwyg/external/jquery.hotkeys.js')}}"></script>
     <script type="text/javascript">
-        var value = '<?php echo $log->log_type;?>';
         $(document).ready(function () {
-            if (value === '0') {
-                $("#daily").show();
-            } else {
-                $("#daily").hide();
-            }
+            $("input[type='radio']").click(function () {
+                var radio_val = $("input[type='radio']:checked").val();
+                if (radio_val === '0') {
+                    $("#daily").show();
+                } else {
+                    $("#daily").hide();
+                }
 
-            if (value === '1') {
-                $("#week").show();
-            } else {
-                $("#week").hide();
-            }
+                if (radio_val === '1') {
+                    $("#week").show();
+                } else {
+                    $("#week").hide();
+                }
 
-            if (value === '2') {
-                $("#month").show();
-            } else {
-                $("#month").hide();
-            }
+                if (radio_val === '2') {
+                    $("#month").show();
+                } else {
+                    $("#month").hide();
+                }
 
-            if (value === '3') {
-                $("#year").show();
-            } else {
-                $("#year").hide();
-            }
-        });
-
-        function showError($msg) {
-            $("#error-message").addClass("error-message").removeClass("success-message").text($msg);
-            return false;
-        }
-
-        function showSuccess($msg) {
-            $("#error-message").addClass("success-message").removeClass("error-message").text($msg);
-            return true;
-        }
-
-        $(function () {
-            $("#log-form").ajaxForm({
-                beforeSubmit: function () {
-                    var $btn = $("button[type='submit']").button('loading');
-
-                    if (value === '0') {
-                        var todayFinished = $.trim($("#todayFinished").val());
-                        if (!todayFinished) {
-                            $btn.button('reset');
-                            return showError("今日完成工作不能为空");
-                        }
-                        var todayUnFinished = $.trim($("#todayUnFinished").val());
-                        if (!todayUnFinished) {
-                            $btn.button('reset');
-                            return showError('未完成工作不能为空');
-                        }
-                    }
-
-                    if (value === '1') {
-                        var weekFinished = $.trim($("#weekFinished").val());
-                        if (!weekFinished) {
-                            $btn.button('reset');
-                            return showError("本周完成工作不能为空");
-                        }
-                        var weekSummary = $.trim($("#weekSummary").val());
-                        if (!weekSummary) {
-                            $btn.button('reset');
-                            return showError('本周工作总结不能为空');
-                        }
-                        var nextWeekPlan = $.trim($("#nextWeekPlan").val());
-                        if (!nextWeekPlan) {
-                            $btn.button('reset');
-                            return showError('下周计划不能为空');
-                        }
-                    }
-
-                    if (value === '2') {
-                        var monthFinished = $.trim($("#monthFinished").val());
-                        if (!monthFinished) {
-                            $btn.button('reset');
-                            return showError("本月工作内容不能为空");
-                        }
-                        var monthSummary = $.trim($("#monthSummary").val());
-                        if (!monthSummary) {
-                            $btn.button('reset');
-                            return showError('本月工作总结不能为空');
-                        }
-                        var nextMonthPlan = $.trim($("#nextMonthPlan").val());
-                        if (!nextMonthPlan) {
-                            $btn.button('reset');
-                            return showError('下月计划不能为空');
-                        }
-                    }
-
-                    if (value === '3') {
-                        var yearTarget = $.trim($("#yearTarget").val());
-                        if (!yearTarget) {
-                            $btn.button('reset');
-                            return showError("今年目标不能为空");
-                        }
-                        var yearPlan = $.trim($("#yearPlan").val());
-                        if (!yearPlan) {
-                            $btn.button('reset');
-                            return showError('今年关键计划不能为空');
-                        }
-                        var yearFinishSituation = $.trim($("#yearFinishSituation").val());
-                        if (!yearFinishSituation) {
-                            $btn.button('reset');
-                            return showError('完成情况不能为空');
-                        }
-                    }
-                },
-                success: function (res) {
-                    $("button[type='submit']").button('reset');
-                    if (res.errcode == 0) {
-                        showSuccess("保存成功");
-                      //  $("input[name='config_id']").val(res.data.id);
-                    } else {
-                        showError(res.message);
-                    }
+                if (radio_val === '3') {
+                    $("#year").show();
+                } else {
+                    $("#year").hide();
                 }
             });
-
         });
 
+        $(function(){
+
+            function initToolbarBootstrapBindings() {
+                var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+                        'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+                        'Times New Roman', 'Verdana'],
+                    fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+                $.each(fonts, function (idx, fontName) {
+                    fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+                });
+                $('a[title]').tooltip({container:'body'});
+                $('.dropdown-menu input').click(function() {return false;})
+                    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+                    .keydown('esc', function () {this.value='';$(this).change();});
+
+                $('[data-role=magic-overlay]').each(function () {
+                    var overlay = $(this), target = $(overlay.data('target'));
+                    overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+                });
+                if ("onwebkitspeechchange"  in document.createElement("input")) {
+                    var editorOffset = $('#editor').offset();
+                    $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+                } else {
+                    $('#voiceBtn').hide();
+                }
+            };
+            function showErrorAlert (reason, detail) {
+                var msg='';
+                if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+                else {
+                    console.log("error uploading file", reason, detail);
+                }
+                $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+
+                    '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+            };
+            initToolbarBootstrapBindings();
+            $('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+            $('#editor').html("<?php echo $log->editorContent;?>");
+            $('#submit').on('click',function(){
+                $('#editor_content').val($('#editor').html())
+                $('#account-form').submit();
+            })
+
+        });
     </script>
 @endsection
 @section('content')
-    <div class="member-box">
+    <div class="setting-box">
         <div class="box-head">
             <h4>修改日志</h4>
         </div>
-        <div class="box-body">
-            <form role="form" class="form-horizontal col-sm-5" method="post" action="{{route('workLog.createOrUpdateData')}}"
-                  id="log-form">
-                <input type="hidden" class="form-control" name="log_id" maxlength="20" placeholder=""
-                       value="{{$log->id}}">
-                <div class="form-group">
-                    <label>日志类型：</label>
-                    <label style="color: #2aa198;font-weight:bold;">
-                        @if($log->log_type == 0) 日报
-                        @elseif($log->log_type == 1) 周报
-                        @elseif($log->log_type == 2) 月报
-                        @elseif($log->log_type == 3) 年计划
+        <div class="box-data">
+            <form role="form" class="add_form" method="post"
+                  action="{{route('workLog.createOrUpdateData')}}?id={{$log->id}}" id="account-form">
+                {{--<div class="log-type">
+                    @if($log->log_type == 0)
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/ri.png"/></div>
+                        <div><input type="radio" name="workLogType" value="0" checked="">日报</div>
+                    </div>
+                        @elseif($log->log_type == 1)
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/zhou.png"/></div>
+                        <div><input type="radio" name="workLogType" value="1">周报</div>
+                    </div>
+                        @elseif($log->log_type == 2)
+                    <div class="log-type-box">
+                        <div><img src="/static/images/log/yue.png"/></div>
+                        <div><input type="radio" name="workLogType" value="2">月报</div>
+                    </div>
+                        @elseif($log->log_type == 3)
+                        <div class="log-type-box">
+                        <div><img src="/static/images/log/nian.png"/></div>
+                        <div><input type="radio" name="workLogType" value="3">年计划</div>
+                         </div>
                         @endif
-                    </label>&nbsp;&nbsp;
-
-                </div>
-                <div id="daily" hidden>
-                    <div class="form-group">
-                        <label for="todayFinished">今日完成工作</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="todayFinished" id="todayFinished" maxlength="20"
-                               placeholder="" value="{{$log->today_finished}}">
+                </div>--}}
+                <div id="daily">
+                    <div>
+                        <p>今日完成工作<span id="necessary">*</span></p>
+                        <textarea type="text"  name="todayFinished" id="todayFinished" maxlength="20"  placeholder="">{{$log->today_finished}}</textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="todayUnFinished">未完成工作</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="todayUnFinished" id="todayUnFinished"
-                               maxlength="20" placeholder="" value="{{$log->today_unfinished}}">
+                    <div>
+                        <p>未完成工作<span>*</span></p>
+                        <textarea type="text"  name="todayUnFinished" id="todayUnFinished" maxlength="20"  placeholder="">{{$log->today_unfinished}}</textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="todayConcerted">需协调工作</label>
-                        <input type="text" class="form-control" name="todayConcerted" id="todayConcerted" maxlength="20"
-                               placeholder="" value="{{$log->concerted}}">
+                    <div>
+                        <p>需协调工作</p>
+                        <textarea type="text"  name="todayConcerted" id="todayConcerted" maxlength="20"  placeholder="">{{$log->concerted}}</textarea>
                     </div>
                 </div>
 
 
                 <div id="week" hidden>
-                    <div class="form-group">
-                        <label for="weekFinished">本周完成工作</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="weekFinished" id="weekFinished" maxlength="20"
-                               placeholder="" value="{{$log->week_finished}}">
+                    <div>
+                        <p>本周完成工作<span>*</span></p>
+                        <textarea type="text"  name="weekFinished" id="weekFinished" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="weekSummary">本周工作总结</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="weekSummary" id="weekSummary" maxlength="20"
-                               placeholder="" value="{{$log->week_summary}}">
+                    <div>
+                        <p>本周工作总结<span>*</span></p>
+                        <textarea type="text"  name="weekSummary" id="weekSummary" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="nextWeekPlan">下周工作计划</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="nextWeekPlan" id="nextWeekPlan" maxlength="20"
-                               placeholder="" value="{{$log->next_week_plan}}">
+                    <div>
+                        <p>下周工作计划<span>*</span></p>
+                        <textarea type="text"  name="nextWeekPlan" id="nextWeekPlan" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="weekConcerted">需协调与帮助</label>
-                        <input type="text" class="form-control" name="weekConcerted" id="weekConcerted" maxlength="20"
-                               placeholder="" value="{{$log->concerted}}">
+                    <div>
+                        <p>需协调与帮助</p>
+                        <textarea type="text"  name="weekConcerted" id="weekConcerted" maxlength="20"  placeholder=""></textarea>
                     </div>
                 </div>
 
 
                 <div id="month" hidden>
-                    <div class="form-group">
-                        <label for="monthFinished">本月工作内容</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="monthFinished" id="monthFinished" maxlength="20"
-                               placeholder="" value="{{$log->month_finished}}">
+                    <div>
+                        <p>本月工作内容<span>*</span></p>
+                        <textarea type="text"  name="monthFinished" id="monthFinished" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="monthSummary">本月工作总结</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="monthSummary" id="monthSummary" maxlength="20"
-                               placeholder="" value="{{$log->month_summary}}">
+                    <div>
+                        <p>本月工作总结<span>*</span></p>
+                        <textarea type="text"  name="monthSummary" id="monthSummary" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="nextMonthPlan">下月工作计划</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="nextMonthPlan" id="nextMonthPlan" maxlength="20"
-                               placeholder="" value="{{$log->next_month_plan}}">
+                    <div>
+                        <p>下月工作计划<span>*</span></p>
+                        <textarea type="text"  name="nextMonthPlan" id="nextMonthPlan" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="monthConcerted">需帮助与支持</label>
-                        <input type="text" class="form-control" name="monthConcerted" id="monthConcerted" maxlength="20"
-                               placeholder="" value="{{$log->concerted}}">
+                    <div>
+                        <p>需帮助与支持<span>*</span></p>
+                        <textarea type="text"  name="monthConcerted" id="monthConcerted" maxlength="20"  placeholder=""></textarea>
                     </div>
                 </div>
 
                 <div id="year" hidden>
-                    <div class="form-group">
-                        <label for="yearTarget">今年目标</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="yearTarget" id="yearTarget" maxlength="20"
-                               placeholder="" value="{{$log->year_target}}">
+                    <div>
+                        <p>今年目标<span>*</span></p>
+                        <textarea type="text"  name="yearTarget" id="yearTarget" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="yearPlan">关键计划</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="yearPlan" id="yearPlan" maxlength="20"
-                               placeholder="" value="{{$log->year_plan}}">
+                    <div>
+                        <p>关键计划<span>*</span></p>
+                        <textarea type="text"  name="yearPlan" id="yearPlan" maxlength="20"  placeholder=""></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="yearFinishSituation">完成情况</label><strong class="text-danger">*</strong>
-                        <input type="text" class="form-control" name="yearFinishSituation" id="yearFinishSituation"
-                               maxlength="20" placeholder="" value="{{$log->year_plan_finished_situation}}">
+                    <div>
+                        <p>完成情况<span>*</span></p>
+                        <textarea type="text"  name="yearFinishSituation" id="yearFinishSituation" maxlength="20"  placeholder=""></textarea>
                     </div>
+                </div>
+                <!-- editor-->
+                <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li><li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li><li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li><li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li><li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li><li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li><li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li><li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li><li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li><li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li><li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li><li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li><li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li><li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li><li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                            <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                            <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                        <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                        <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                        <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="insertunorderedlist" title="" data-original-title="Bullet list"><i class="icon-list-ul"></i></a>
+                        <a class="btn" data-edit="insertorderedlist" title="" data-original-title="Number list"><i class="icon-list-ol"></i></a>
+                        <a class="btn" data-edit="outdent" title="" data-original-title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+                        <a class="btn" data-edit="indent" title="" data-original-title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                        <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                        <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                        <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><i class="icon-link"></i></a>
+                        <div class="dropdown-menu input-append">
+                            <input class="span2" placeholder="URL" type="text" data-edit="createLink">
+                            <button class="btn" type="button">Add</button>
+                        </div>
+                        <a class="btn" data-edit="unlink" title="" data-original-title="Remove Hyperlink"><i class="icon-cut"></i></a>
+
+                    </div>
+
+                    <div class="btn-group">
+                        <a class="btn" title="" id="pictureBtn" data-original-title="Insert picture (or just drag &amp; drop)"><i class="icon-picture"></i></a>
+                        <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 41px; height: 30px;">
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="undo" title="" data-original-title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+                        <a class="btn" data-edit="redo" title="" data-original-title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+                    </div>
+                    <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
+                </div>
+                <div id="editor" contenteditable="true">
+                </div>
+                <div>
+                    <textarea type="text"  name="editor_content" id="editor_content" maxlength="20"  placeholder="" hidden>{{$log->editorContent}}</textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="remark">备注</label>
-                    <textarea class="form-control" rows="3" title="描述" name="remark" id="remark"
-                              maxlength="500">{{$log->remark}}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="img">图片</label>
-                    <span></span>
-                    {{--<div id="filePicker" class="btn btn-success" >选择</div>--}}
-                    {{--<button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传图片</button>--}}
-                    <label class="btn btn-success" for="saveImage" style="color:#fff">上传文件</label>
-                    <input type="file" id="saveImage" name="saveImage" accept="image/*"
-                           style="position:absolute;clip:rect(0 0 0 0);">
-                </div>
-                <div class="form-group">
-                    <label for="img">附件</label>
-                    <span></span>
-                    {{--<div id="filePicker" class="btn btn-success" >选择</div>--}}
-                    {{--<button type="button" id="saveImage" class="btn btn-success"  data-loading-text="上传中...">上传附件</button>--}}
-                    <label class="btn btn-success" for="saveFile" style="color:#fff">上传文件</label>
-                    <input type="file" id="saveFile" name="saveFile"
-                           accept="text/plain,application/vnd.ms-excel,application/msword"
-                           style="position:absolute;clip:rect(0 0 0 0);">
-                </div>
-                <div class="form-group">
-                    <label for="sendToWho">发给谁</label><strong class="text-danger">*</strong>
-                    <img src="{{asset('/static/images/plus.jpg')}}" style="width: 10%">&nbsp;添加人员<br>
-                    <img src="{{asset('/static/images/plus.jpg')}}" style="width: 10%;margin-left:55px">&nbsp;添加组
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">提交</button>
+                <div class="btn-submit">
+                    <button id="submit" class="btn btn-success">提交</button>
                     <span id="error-message"></span>
                 </div>
             </form>

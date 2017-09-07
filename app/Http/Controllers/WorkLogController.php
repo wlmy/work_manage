@@ -15,6 +15,9 @@ class WorkLogController extends Controller
 
     public function add()
     {
+        if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
+            return redirect(route('account.login'));
+        }
         return view('workLog.add', $this->data);
     }
 
@@ -22,8 +25,8 @@ class WorkLogController extends Controller
     {
         if ($this->isPost()) {
             $logType = intval($this->request->input('logType', 0));
-            $attachmentUrl = $this->request->input('imgUrl','');
-            $editorContent = $this->request->input('editor_content','');dd($editorContent);
+            $editorContent = $this->request->input('editor_content', '');
+
 
             $dailyData = [
                 'today_finished' => $this->request->input('todayFinished'),
@@ -54,7 +57,7 @@ class WorkLogController extends Controller
             $requestData = [
                 'member_id' => $this->data['member']['member_id'],
                 'log_type' => empty($logType) ? 0 : $logType,
-                'attachmentUrl' => $attachmentUrl,
+                'editorContent' => $editorContent,
                 'create_time' => date('Y:m:d H:i:s', time()),
                 'update_time' => date('Y:m:d H:i:s', time()),
             ];
@@ -62,7 +65,7 @@ class WorkLogController extends Controller
             $requestData = array_merge($requestData, $differentTypeData);
 
             $workLog = new workLog($requestData);
-            $log_id = intval($this->request->input('log_id', 0));
+            $log_id = intval($this->request->get('id', 0));
             if ($log_id > 0) {
                 $workLog = workLog::query()->find($log_id);
                 if ($workLog->update($requestData) == false) {
@@ -95,7 +98,10 @@ class WorkLogController extends Controller
 
     public function index()
     {
-        $group = $this->request->input('group');
+        if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
+            return redirect(route('account.login'));
+        }
+        //$group = $this->request->input('group');
         $start_time = $this->request->input('start_time');
         $end_time = $this->request->input('end_time');
         $nickname = $this->request->input('nickname');
@@ -105,20 +111,25 @@ class WorkLogController extends Controller
             'work_log.*',
             'member.account'
         ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
-        if (isset($group) && $group >= 0) {
-            $select->where('work_log.log_type', '=', $group);
-        }
+        /* if (isset($group) && $group >= 0) {
+             $select->where('work_log.log_type', '=', $group);
+         }*/
         if (!empty($start_time)) {
-            $select->where('work_log.create_time', '>', $start_time . '00:00:00');
+            $select->where('work_log.create_time', '>=', $start_time . '00:00:00');
         }
         if (!empty($end_time)) {
-            $select->where('work_log.create_time', '=', $end_time . '23:59:59');
+            $select->where('work_log.create_time', '<=', $end_time . '23:59:59');
         }
         if (!empty($nickname)) {
             $select->where('member.account', 'like', '%' . $nickname . '%');
         }
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
         $this->data['logLists'] = $lists;
+        $this->data['logSearchParams'] = array(
+            'nickname' => $nickname,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        );
         return view('workLog.index', $this->data);
     }
 

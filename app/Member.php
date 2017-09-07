@@ -2,6 +2,8 @@
 
 namespace SmartWiki;
 
+use Adldap\Connections\Ldap;
+use Illuminate\Support\Facades\Config;
 use SmartWiki\Exceptions\ArgumentNullException;
 use SmartWiki\Exceptions\ArgumentOutOfRangeException;
 use SmartWiki\Exceptions\DataExistException;
@@ -57,7 +59,7 @@ class Member extends ModelBase
     protected $table = 'member';
     protected $primaryKey = 'member_id';
     protected $dateFormat = 'Y-m-d H:i:s';
-    protected $guarded = ['member_id','last_login_time'];
+    protected $guarded = ['member_id', 'last_login_time'];
 
     public $timestamps = false;
 
@@ -69,46 +71,46 @@ class Member extends ModelBase
      */
     public static function addOrUpdateMember(Member &$member)
     {
-        if($member->member_id <= 0 and empty($member->account)){
-            throw new ArgumentNullException('账号不能为空',40507);
+        if ($member->member_id <= 0 and empty($member->account)) {
+            throw new ArgumentNullException('账号不能为空', 40507);
         }
         $matches = array();
-        if($member->member_id<=0 and !preg_match('/^[a-zA-Z][a-zA-Z0-9_]{4,19}$/',$member->account,$matches)){
-            throw new FormatException('账号必须以英文字母开头并且大于5个字符小于20个字符',40508);
+        if ($member->member_id <= 0 and !preg_match('/^[a-zA-Z][a-zA-Z0-9_]{4,19}$/', $member->account, $matches)) {
+            throw new FormatException('账号必须以英文字母开头并且大于5个字符小于20个字符', 40508);
         }
 
-        if(empty($member->nickname) === false and mb_strlen($member->nickname) > 20){
-            throw new FormatException('用户昵称最少3个字符，最多20字符',40501);
+        if (empty($member->nickname) === false and mb_strlen($member->nickname) > 20) {
+            throw new FormatException('用户昵称最少3个字符，最多20字符', 40501);
         }
-        if(empty($member->email)){
-            throw new ArgumentNullException('用户邮箱不能为空',40502);
+        if (empty($member->email)) {
+            throw new ArgumentNullException('用户邮箱不能为空', 40502);
         }
-        if(!filter_var ($member->email, FILTER_VALIDATE_EMAIL )){
-            throw new FormatException('用户邮箱不合法',40503);
+        if (!filter_var($member->email, FILTER_VALIDATE_EMAIL)) {
+            throw new FormatException('用户邮箱不合法', 40503);
         }
-        if(empty($phone) === false and strlen($member->phone) > 20){
-            throw new FormatException('手机号码不合法',40504);
+        if (empty($phone) === false and strlen($member->phone) > 20) {
+            throw new FormatException('手机号码不合法', 40504);
         }
-        if(empty($member->description) === false and mb_strlen($member->description) > 500){
-            throw new ArgumentOutOfRangeException('描述最多500字',40505);
+        if (empty($member->description) === false and mb_strlen($member->description) > 500) {
+            throw new ArgumentOutOfRangeException('描述最多500字', 40505);
         }
 
 
+        if ($member->member_id > 0) {
 
-        if($member->member_id > 0) {
-
-            if(empty(Member::where('email','=',$member->email)->where('member_id','<>',$member->member_id)->first()) === false){
-                throw new DataExistException('邮箱已存在',40509);
+            if (empty(Member::where('email', '=', $member->email)->where('member_id', '<>',
+                    $member->member_id)->first()) === false) {
+                throw new DataExistException('邮箱已存在', 40509);
             }
 
             $user = Member::find($member->member_id);
-            if(empty($user)){
-                throw new ResultNullException('用户不存在',40506);
+            if (empty($user)) {
+                throw new ResultNullException('用户不存在', 40506);
             }
 
-        }else{
-            if(empty(Member::where('email','=',$member->email)->first()) === false){
-                throw new DataExistException('邮箱已存在',40509);
+        } else {
+            if (empty(Member::where('email', '=', $member->email)->first()) === false) {
+                throw new DataExistException('邮箱已存在', 40509);
             }
         }
         return $member->save();
@@ -123,27 +125,82 @@ class Member extends ModelBase
      * @return bool|Member
      * @throws DataNullException
      */
-    public static function login($account,$password,$ip = null, $userAgent = null)
+    public static function login($account, $password, $ip = null, $userAgent = null)
     {
-        $member = Member::where('account','=',$account)->where('state','=',0)->take(1)->first();
+        //建立ldap连接
+        $ldap = new Ldap();
+        $ldapHost = Config::get('adldap.connection_settings.domain_controllers');
+        $dn = Config::get('adldap.connection_settings.base_dn');
+        $port = Config::get('adldap.connection_settings.port');
 
-        if(empty($member) or password_verify($password,$member->member_passwd) === false){
+        $ldap->connect($ldapHost, $port);
 
-            throw new DataNullException('账号或密码错误',40401);
+        $ou = 'ou=User'; //线上配置的组织单元名
+        $sDn = $ou . ',' . $dn;
+
+        /* ===========ldap验证开始 包括2个判断，1.首先查询用户是否存在； 2.再校验用户密码是否准确  start================ */
+        $accountFilter = "(cn=$account)";
+        $justThese = array("cn", "userPassword", "uid", "mail");
+        $searchResult = $ldap->search($sDn, $accountFilter, $justThese);
+        $userInfo = $ldap->getEntries($searchResult);
+        if ($userInfo['count'] == 0) {
+            $member = Member::where('account', '=', $account)->where('state', '=', 0)->take(1)->first();
+            if (empty($member) || password_verify($password, $member->member_passwd) === false) {
+                throw new DataNullException('账户密码错误', 40403);
+            }
+        } else {
+            $uid = $userInfo[0]['uid'][0];
+            $userName = "uid=$uid," . $sDn;
+            try {
+                $ldap->bind($userName, $password);
+            } catch (\Exception $e) {
+                throw new DataNullException("ldap验证账号或密码错误", 40402);
+            }
+            $userAccount = $userInfo[0]['cn'][0];
+            $member = Member::where('account', '=', $userAccount)->where('state', '=', 0)->take(1)->first();
+            if (empty($member)) {
+                $member = new member();
+                $member->member_id = $uid;
+                $member->account = $userAccount;
+                $member->member_passwd = password_hash($password, PASSWORD_DEFAULT);
+                $member->group_level = 0;
+            }
         }
-        $original_data = json_encode($member,JSON_UNESCAPED_UNICODE);
+        /* ============ldap验证结束  end  ================*/
 
         $member->last_login_time = date('Y-m-d H:i:s');
         $member->last_login_ip = $ip;
         $member->user_agent = $userAgent;
         $member->save();
 
-        $logs = "用户 {$account} 在 {$member->last_login_time} 登录成功.IP：{$ip}，User-Agent：{$userAgent}。";
-        $present_data = json_encode($member,JSON_UNESCAPED_UNICODE);
+        $original_data = json_encode($member, JSON_UNESCAPED_UNICODE);
 
-        Logs::addLogs($logs,$member->member_id,$original_data,$present_data);
+        $logs = "用户 {$account} 在 {$member->last_login_time} 登录成功.IP：{$ip}，User-Agent：{$userAgent}。";
+        $present_data = json_encode($member, JSON_UNESCAPED_UNICODE);
+
+        Logs::addLogs($logs, $member->member_id, $original_data, $present_data);
 
         return $member;
+
+        /* $member = Member::where('account','=',$account)->where('state','=',0)->take(1)->first();
+
+         if(empty($member) or password_verify($password,$member->member_passwd) === false){
+
+             throw new DataNullException('账号或密码错误',40401);
+         }
+         $original_data = json_encode($member,JSON_UNESCAPED_UNICODE);
+
+         $member->last_login_time = date('Y-m-d H:i:s');
+         $member->last_login_ip = $ip;
+         $member->user_agent = $userAgent;
+         $member->save();
+
+         $logs = "用户 {$account} 在 {$member->last_login_time} 登录成功.IP：{$ip}，User-Agent：{$userAgent}。";
+         $present_data = json_encode($member,JSON_UNESCAPED_UNICODE);
+
+         Logs::addLogs($logs,$member->member_id,$original_data,$present_data);
+
+         return $member;*/
     }
 
     /**
@@ -154,10 +211,10 @@ class Member extends ModelBase
      */
     public static function findNormalMemberOfFirst($where = array(), $columns = ['*'])
     {
-        $query = static::where('state','=',0);
+        $query = static::where('state', '=', 0);
 
-        if(empty($where) === false){
-            foreach ($where as $item){
+        if (empty($where) === false) {
+            foreach ($where as $item) {
                 $query = call_user_func_array([$query, 'where'], $item);
             }
         }

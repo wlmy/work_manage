@@ -45,6 +45,7 @@
             });
 
             $('.form_date').datetimepicker({
+                format: "yyyy-mm-dd",
                 language: 'fr',
                 weekStart: 1,
                 todayBtn: 1,
@@ -66,68 +67,8 @@
         <form action="{{route("workLog.index")}}" id="form_search" method="post">
             <div class="search-form">
                 <div class="first-row">
-                    <div class="type">
-                       <p> 模板筛选：</p>
-                        <select name="group" class="search-input">
-                            <option value="-1"
-                                    @if(isset($_REQUEST['group']) && $_REQUEST['group'] == '-1') selected="selected" @endif>
-                                全部
-                            </option>
-                            <option value="0"
-                                    @if(isset($_REQUEST['group']) && $_REQUEST['group'] == '0') selected="selected" @endif>
-                                日报
-                            </option>
-                            <option value="1"
-                                    @if(isset($_REQUEST['group']) && $_REQUEST['group'] == '1') selected="selected" @endif>
-                                周报
-                            </option>
-                            <option value="2"
-                                    @if(isset($_REQUEST['group']) && $_REQUEST['group'] == '2') selected="selected" @endif>
-                                月报
-                            </option>
-                            <option value="3"
-                                    @if(isset($_REQUEST['group']) && $_REQUEST['group'] == '3') selected="selected" @endif>
-                                年计划
-                            </option>
-                        </select>
-
-                    </div>
-                    <div class="nickname">
-                        <span>姓名：</span><input type="text" placeholder="请输入用户姓名"
-                                  value="@if(!empty($_REQUEST['nickname'])) {{$_REQUEST['nickname']}} @endif"
-                                  class="search-input" name="nickname">
-                            <a url="{{route("workLog.index")}}" id="search" class="sch-btn icon-box btn-search"> </a>
-                    </div>
-
-                </div>
-                <div class="two-row">
-                    <p>按时间段：</p>
-                    <div class="input-group" data-date="" data-date-format="yyyy-mm-dd"
-                         data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                        <input class="form-control search-input  date form_date col-md-7" size="16" type="text"
-                               value="@if(!empty($_REQUEST['start_time'])) {{$_REQUEST['start_time']}} @endif"
-                               readonly=""
-                               name="start_time">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                        <span class="input-group-addon">至</span>
-
-                        <input class="form-control search-input date form_date col-md-7" size="16" type="text"
-                               value="@if(!empty($_REQUEST['start_time'])) {{$_REQUEST['start_time']}} @endif"
-                               readonly=""
-                               name="start_time">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
-
-
-            </div>
-
-            {{-- <div class="table-bar">
-                 <div class="search-form fr cf">
-                     <label class="type">模板筛选：</label>
-                     <div class="sleft">
+                    {{-- <div class="type">
+                        <p> 模板筛选：</p>
                          <select name="group" class="search-input">
                              <option value="-1"
                                      @if(isset($_REQUEST['group']) && $_REQUEST['group'] == '-1') selected="selected" @endif>
@@ -150,43 +91,44 @@
                                  年计划
                              </option>
                          </select>
-                     </div>
-                     <label class="type">选择日期：</label>
-                     <div class="input-group date form_date col-md-3" data-date="" data-date-format="yyyy-mm-dd"
-                          data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="float: left">
-                         <input class="form-control search-input" size="16" type="text"
-                                value="@if(!empty($_REQUEST['start_time'])) {{$_REQUEST['start_time']}} @endif"
-                                readonly=""
-                                name="start_time">
-                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                     <label class="type">&nbsp;-&nbsp;</label>
-                     <div class="input-group date form_date col-md-3" data-date="" data-date-format="yyyy-mm-dd"
-                          data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" style="float: left">
-                         <input class="form-control  search-input" size="16" type="text"
-                                value="@if(!empty($_REQUEST['end_time'])) {{$_REQUEST['end_time']}} @endif" readonly=""
-                                name="end_time">
-                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                     </div>
-                     <label class="type" style="margin-left: 5px;">姓名：</label>
-                     <div class="sleft">
-                         <input type="text" placeholder="请输入用户姓名"
-                                value="@if(!empty($_REQUEST['nickname'])) {{$_REQUEST['nickname']}} @endif"
-                                class="search-input" name="nickname"
-                                style="width: 120px">
-                     </div>
-                     <a url="{{route("workLog.index")}}" id="search" class="sch-btn "><i class="btn-search"></i></a>
 
-                 </div>
-             </div>--}}
+                     </div>--}}
+                    <div class="nickname">
+                        <h style="font-weight: bold;">姓名：&nbsp;&nbsp;&nbsp;</h>
+                        <input type="text" placeholder="请输入用户姓名"
+                               value="@if(!empty($_REQUEST['nickname'])) {{$_REQUEST['nickname']}} @endif"
+                               class="search-input" name="nickname">
+                        <a url="{{route("workLog.index")}}" id="search" class="sch-btn icon-box btn-search"> </a>
+                    </div>
+
+                </div>
+                <div class="two-row">
+                    <p style="width: 90px">按时间段：</p>
+                    <div class="input-group" data-date="" data-date-format="yyyy-mm-dd"
+                         data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                        <input class="form-control search-input  date form_date col-md-7" size="16" type="text"
+                               value="@if(!empty($_REQUEST['start_time'])) {{$_REQUEST['start_time']}} @endif"
+                               readonly=""
+                               name="start_time">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <span class="input-group-addon">至</span>
+
+                        <input class="form-control search-input date form_date col-md-7" size="16" type="text"
+                               value="@if(!empty($_REQUEST['end_time'])) {{$_REQUEST['end_time']}} @endif"
+                               readonly=""
+                               name="end_time">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+            </div>
         </form>
         @foreach($logLists as $item)
             <div class="list-container">
                 <div class="log-user">
                     <div class="pic-box">
-                        <p class="account">{{$item->account}}</p>
+                        <p class="account">{{mb_substr($item->account,0,2)}}</p>
                     </div>
                     <div class="name-date">
                         <div>{{$item->account}}</div>
@@ -198,17 +140,17 @@
                         </div>
                     @endif
                 </div>
-                <div class="log-type">
-                    @if($item->log_type == 0)
-                        日报
-                    @elseif($item->log_type == 1)
-                        周报
-                    @elseif($item->log_type == 2)
-                        月报
-                    @elseif($item->log_type == 3)
-                        年计划
-                    @endif
-                </div>
+                {{--  <div class="log-type">
+                      @if($item->log_type == 0)
+                          日报
+                      @elseif($item->log_type == 1)
+                          周报
+                      @elseif($item->log_type == 2)
+                          月报
+                      @elseif($item->log_type == 3)
+                          年计划
+                      @endif
+                  </div>--}}
                 <div class="box">
 
                     @if($item->log_type == 0)
@@ -277,7 +219,7 @@
         @endforeach
         <div>
             <nav>
-                {{$logLists->render()}}
+                {{$logLists->appends(['nickname' => $logSearchParams['nickname'],'start_time'=> $logSearchParams['start_time'],'end_time'=>$logSearchParams['end_time']])->render()}}
             </nav>
         </div>
 
