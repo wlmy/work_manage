@@ -49,7 +49,7 @@
                 </li>
                 <li>
                     <a href="{{route('workLog.add')}}" class="img">
-                        <img src="{{$member->headimgurl}}" class="img-circle" style="width: 43px;">
+                        <img src="/static/images/middle.gif" class="img-circle" style="width: 43px;">
                     </a>
                 </li>
             </ul>

@@ -82,9 +82,42 @@
             initToolbarBootstrapBindings();
             $('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
             $('#submit').on('click',function(){
-                $('#editor_content').val($('#editor').html())
-                $('#account-form').submit();
-            })
+                $('#editor_content').val($('#editor').html());
+                $("#account-form").ajaxForm({
+                    beforeSubmit : function () {
+                        var $btn = $("button[type='submit']").button('loading');
+                        var todayFinished = $.trim($("#todayFinished").val());
+                        if(!todayFinished){
+                            $btn.button('reset');
+                            return showError('今日完成工作不能为空');
+                        }
+
+                        var todayUnFinished = $.trim($("#todayUnFinished").val());
+                        if(!todayUnFinished){
+                            $btn.button('reset');
+                            return showError('未完成工作不能为空');
+                        }
+                    },
+                    success : function (res) {
+                        if(res.errcode == 0){
+                            window.location.href=res.data['url'];
+                        }else{
+                            showError(res.message);
+                        }
+                    }
+                });
+            });
+
+            function showError($msg) {
+                $("#error-message").addClass("error-message").removeClass("success-message").text($msg);
+                return false;
+            }
+
+            function showSuccess($msg) {
+                $("#error-message").addClass("success-message").removeClass("error-message").text($msg);
+                return true;
+            }
+
 
         });
     </script>

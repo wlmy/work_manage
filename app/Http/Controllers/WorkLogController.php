@@ -32,27 +32,23 @@ class WorkLogController extends Controller
                 'today_finished' => $this->request->input('todayFinished'),
                 'today_unfinished' => $this->request->input('todayUnFinished'),
                 'concerted' => $this->request->input('todayConcerted'),
-                'remark' => $this->request->input('remark'),
             ];
             $weekData = [
                 'week_finished' => $this->request->input('weekFinished'),
                 'week_summary' => $this->request->input('weekSummary'),
                 'next_week_plan' => $this->request->input('nextWeekPlan'),
                 'concerted' => $this->request->input('weekConcerted'),
-                'remark' => $this->request->input('remark'),
             ];
             $monthData = [
                 'month_finished' => $this->request->input('monthFinished'),
                 'month_summary' => $this->request->input('monthSummary'),
                 'next_month_plan' => $this->request->input('nextMonthPlan'),
                 'concerted' => $this->request->input('monthConcerted'),
-                'remark' => $this->request->input('remark'),
             ];
             $yearData = [
                 'year_target' => $this->request->input('yearTarget'),
                 'year_plan' => $this->request->input('yearPlan'),
                 'year_plan_finished_situation' => $this->request->input('yearFinishSituation'),
-                'remark' => $this->request->input('remark'),
             ];
             $requestData = [
                 'member_id' => $this->data['member']['member_id'],
@@ -76,7 +72,7 @@ class WorkLogController extends Controller
                     return $this->jsonResult(500);
                 }
             }
-            return redirect('/work/index');
+            return $this->jsonResult(0,['url' => route('workLog.index')]);
         }
     }
 

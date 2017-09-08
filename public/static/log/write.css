@@ -1,7 +1,7 @@
 /** search **/
 .search-form {
     width: 700px;
-    height: 120px;
+    height: 150px;
 }
 .type{
     width: 200px;
@@ -9,7 +9,7 @@
 }
 .nickname{
     display: inline-block;
-    width: 260px;
+    width: 280px;
     margin-left: 10px;
 }
 
@@ -21,7 +21,6 @@
 }
 p{
     float: left;
-    font-weight: bold;
 }
 .two-row{
     margin-top: 15px;
@@ -157,8 +156,8 @@ p{
     padding: 8px;
 }
 textarea{
-    width: 300px;
-    height: 100px;
+    width: 580px;
+    height: 150px;
 }
 #daily, #week, #month, #year {
     margin-top: 20px;
