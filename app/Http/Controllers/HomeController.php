@@ -35,6 +35,9 @@ class HomeController extends Controller
         if(!wiki_config('ENABLE_ANONYMOUS',false) && empty($this->member)){
             return redirect(route('account.login'));
         }
+
+        return redirect(route('workLog.add'));
+
         $pageIndex = intval($this->request->input('page',1));
         $member_id = null;
 
