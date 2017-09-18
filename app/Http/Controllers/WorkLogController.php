@@ -18,6 +18,24 @@ class WorkLogController extends Controller
         if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
             return redirect(route('account.login'));
         }
+
+        $start_time = $this->request->input('start_time');
+        $end_time = $this->request->input('end_time');
+        $nickname = $this->request->input('nickname');
+        $page = max(intval($this->request->input('page', 1)), 1);
+        $select = workLog::select([
+            'work_log.*',
+            'member.account'
+        ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
+        $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
+        $this->data['logLists'] = $lists;
+        $this->data['logSearchParams'] = array(
+            'nickname' => $nickname,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        );
+
+
         return view('workLog.add', $this->data);
     }
 

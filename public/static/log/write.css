@@ -3,32 +3,37 @@
     width: 700px;
     height: 150px;
 }
-.type{
+
+.type {
     width: 200px;
     display: inline-block;
 }
-.nickname{
+
+.nickname {
     display: inline-block;
     width: 280px;
     margin-left: 10px;
 }
 
-.first-row{
+.first-row {
     margin-top: 10px;
 }
-.search-input{
+
+.search-input {
     height: 26px;
 }
-p{
+
+p {
     float: left;
 }
-.two-row{
+
+.two-row {
     margin-top: 15px;
     margin-bottom: 10px;
     width: 600px;
 }
 
-.icon-box{
+.icon-box {
     display: inline-block;
     margin-top: 10px;
     width: 25px;
@@ -45,8 +50,6 @@ p{
     background: url(../images/bg_icon.png) no-repeat -50px 0;
 }
 
-
-
 /* show log */
 .account {
     border-radius: 50%;
@@ -61,11 +64,14 @@ p{
 
 .list-container {
     box-sizing: border-box;
-    width: 100%;
+    width: 1306px;
     height: auto;
     padding: 10px;
     margin-bottom: 20px;
-    border-top: 1px solid #ccc;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+    margin-left: -8px;
 }
 
 .log-user {
@@ -90,17 +96,22 @@ p{
     width: 70px;
 }
 
-.name-date {
+.name-content {
     float: left;
-    line-height: 30px;
     display: inline-block;
-    width: 200px;
+}
+.date{
+    color: #999;
+    font-size: 12px;
+    display: inline-block;
 }
 
 .btn-box {
-    float: left;
+    width: 40px;
     display: inline-block;
-    width: 200px;
+}
+.log-user-name{
+    color: #5d9cec;
 }
 
 .list-name {
@@ -110,8 +121,9 @@ p{
 .list-content {
     display: inline-block;
 }
-.log-alter{
-    border-radius: 20%;
+
+.log-alter {
+    border-radius: 66%;
     background-color: gainsboro;
     width: 60px;
     height: 60px;
@@ -122,6 +134,12 @@ p{
     padding: 8px;
 }
 
+.split {
+    padding-left: 40px;
+    margin: 20px 0 0px 25px;
+    border-left: 1px solid #d3d3d3;
+    height: auto;
+}
 
 /** add log **/
 .box-data {
@@ -151,18 +169,61 @@ p span {
     color: red;
 }
 
-p{
+p {
     width: 110px;
     padding: 8px;
 }
-textarea{
+
+textarea {
     width: 581px;
     height: 150px;
 }
+
 #daily, #week, #month, #year {
     margin-top: 20px;
 }
 
-#callBackPager{
+#callBackPager {
     float: right;
+}
+
+/** 918 new **/
+.main-content {
+    margin-left: -10px;
+    width: 1400px;
+    display: inline-block;
+    float: left;
+}
+
+#layout {
+    margin-top: 14px;
+    margin-left: -30px;
+
+}
+
+.log-info {
+    width: 800px;
+}
+
+.user-login-info {
+    width: 310px;
+    height: 400px;
+    display: inline-block;
+    margin-top: 13px;
+    border: 1px solid #e7e7e7;
+}
+
+.user-info {
+    margin-top: 25px;
+    margin-left: 20px;
+}
+
+dt {
+    margin: -5px 0 0 -60px;
+    border-radius: 40px;
+    background-color: #2aa198;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: white
 }

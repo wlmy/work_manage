@@ -1,4 +1,4 @@
-@extends('member')
+@extends('header')
 @section('title')看日志@endsection
 @section('styles')
     <link href="{{asset('static/log/write.css')}}" rel="stylesheet">

@@ -25,7 +25,7 @@
 <header class="navbar navbar-static-top smart-nav navbar-fixed-top" role="banner">
     <div class="container">
         <div class="navbar-header">
-            <a href="{{route('home.index')}}" class="navbar-brand"> 海风教育应用</a>
+            <a href="{{route('home.index')}}" class="navbar-brand"> 海风教育应用平台</a>
         </div>
     </div>
 </header>
