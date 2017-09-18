@@ -26,14 +26,7 @@
             <div class="log-user">
                 <div class="name-content">
                     <div class="log-user-name">wulimin</div>
-                    <div>werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        e</div>
+                    <div>坎坎坷坷扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩llllllllllllllllllllllll</div>
                 </div>
             </div>
 
@@ -49,14 +42,7 @@
             <div class="log-user">
                 <div class="name-content">
                     <div class="log-user-name">wulimin</div>
-                    <div>werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        werrwrwerweeeeeeeeeeweewrwwwwwwwwwrwrewrwerwreeeeeeee
-                        e</div>
+                    <div>坎坎坷坷扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩llllllllllllllllllllllll</div>
                 </div>
             </div>
 
@@ -87,7 +73,7 @@
 
     $(function() {
         testEditor = editormd("test-editormd", {
-            width   : "95%",
+            width   : "100%",
             height  : 300,
             syncScrolling : "single",
             path    : "/static/editormd-log/lib/"
