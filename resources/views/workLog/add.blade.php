@@ -1,6 +1,5 @@
 @extends('header')
 @section('styles')
-    <link href="{{asset('static/log/write.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('static/editormd-log/css/write.css')}}" />
     <link rel="stylesheet" href="{{asset('static/editormd-log/css/editormd.css')}}" />
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />

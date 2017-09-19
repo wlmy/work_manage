@@ -12,6 +12,7 @@
     <link href="{{asset('static/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('static/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('static/styles/styles.css')}}" rel="stylesheet">
+    <link href="{{asset('static/log/write.css')}}" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="{{asset('static/bootstrap/js/html5shiv.min.js')}}"></script>
     <script src="{{asset('static/bootstrap/js/respond.min.js')}}"></script>
@@ -26,7 +27,8 @@
     <header class="navbar navbar-static-top smart-nav navbar-fixed-top" role="banner" style="background-color: #5cb85c">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a href="#" class="navbar-brand" style="margin-left: 180px;color: white"><i class="fa fa-th-large"></i></a>
+                <a href="#" class="navbar-brand" style="color: white">海风教育应用</a>
+                <a href="#" class="navbar-brand" style="margin-left: 0px;color: white"><i class="fa fa-th-large"></i></a>
             </div>
             <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                 <ul class="nav navbar-nav navbar-right">

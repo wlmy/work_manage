@@ -97,10 +97,11 @@ p {
 }
 
 .name-content {
-    word-wrap:break-word;
+    word-wrap: break-word;
     display: inline-block;
 }
-.date{
+
+.date {
     color: #999;
     font-size: 12px;
     display: inline-block;
@@ -110,7 +111,8 @@ p {
     width: 40px;
     display: inline-block;
 }
-.log-user-name{
+
+.log-user-name {
     color: #5d9cec;
 }
 
@@ -191,7 +193,7 @@ textarea {
     float: right;
 }
 
-/** 918 new **/
+/** 918 new  --  start **/
 .main-content {
     width: calc(100% - 340px);
     display: inline-block;
@@ -212,7 +214,7 @@ textarea {
     min-height: 300px;
     display: inline-block;
     float: right;
-    margin-right:10px;
+    margin-right: 10px;
     border: 1px solid #e7e7e7;
 }
 
@@ -224,8 +226,8 @@ textarea {
 dt {
     /*margin: -5px 0 0 -60px;*/
     position: absolute;
-    top:-30px;
-    left:-20px;
+    top: -30px;
+    left: -20px;
     border-radius: 40px;
     background-color: #2aa198;
     width: 40px;
@@ -233,3 +235,48 @@ dt {
     text-align: center;
     color: white
 }
+
+.report {
+    border: 1px solid #e7e7e7;
+    padding: 20px;
+    background-color: white;
+    width: 99%;
+}
+
+.report-search > div:not(.filter) {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.report-month {
+    width: 36px;
+    text-align: center;
+    margin-right: 5px;
+}
+
+.report-user-name {
+    float: right;
+}
+
+.report-user-name > div:not(.filter) {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.search-btn-box {
+    margin-left: 5px;
+}
+
+/*溢出部分样式*/
+tr td {
+    padding: 0 7px;
+    word-break:break-all;
+}
+
+table {
+    table-layout: fixed; /* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+}
+
+/** 919 new  --  end  **/
