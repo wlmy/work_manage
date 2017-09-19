@@ -34,12 +34,10 @@ class WorkLogController extends Controller
             'start_time' => $start_time,
             'end_time' => $end_time
         );
-
-
         return view('workLog.add', $this->data);
     }
 
-    public function createOrUpdateData()
+    public function createOrUpdateData_bak()
     {
         if ($this->isPost()) {
             $logType = intval($this->request->input('logType', 0));
@@ -90,8 +88,42 @@ class WorkLogController extends Controller
                     return $this->jsonResult(500);
                 }
             }
-            return $this->jsonResult(0,['url' => route('workLog.index')]);
+            return $this->jsonResult(0, ['url' => route('workLog.index')]);
         }
+    }
+
+
+    public function createOrUpdateData()
+    {
+        if (empty($this->member_id)) {
+            return redirect(route('account.login'));
+        }
+        if ($this->isPost()) {
+            $content = $this->request->input('test-editormd-markdown-doc', null);
+            $result = workLog::query()
+                ->where('member_id', $this->member_id)
+                ->where('create_time', '>', '2017-09-19 00:00:00')
+                ->where('create_time', '<', '2017-09-19 23:59:59')
+                ->first();
+            if (empty($result)) {
+                $workLog = new workLog();
+                $workLog->editorContent = $content;
+                $workLog->create_time = date('Y:m:d H:i:s', time());
+                if ($workLog->save() == false) {
+                    return $this->jsonResult(500);
+                }
+            } else {
+                $data = [
+                    'editorContent' => $result->editorContent . $content,
+                    'update_time' => date('Y:m:d H:i:s', time()),
+                ];
+                if ($result->update($data) == false) {
+                    return $this->jsonResult(500);
+                }
+            }
+        }
+
+        return $this->jsonResult(0, ['url' => route('workLog.add')]);
     }
 
     public function edit()
@@ -144,6 +176,10 @@ class WorkLogController extends Controller
             'start_time' => $start_time,
             'end_time' => $end_time
         );
+        return view('workLog.index', $this->data);
+    }
+
+    public function other(){
         return view('workLog.index', $this->data);
     }
 

@@ -273,10 +273,153 @@ dt {
 tr td {
     padding: 0 7px;
     word-break:break-all;
+    text-align: center;
+}
+tr th {
+    text-align: center;
 }
 
 table {
     table-layout: fixed; /* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+}
+
+#upload-logo-panel .wraper {
+    float: left;
+    background: #f6f6f6;
+    position: relative;
+    width: 360px;
+    height: 360px;
+    overflow: hidden;
+}
+
+#upload-logo-panel .watch-crop-list {
+    width: 170px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #f6f6f6;
+    text-align: center;
+    float: right;
+    height: 360px;
+}
+
+#image-wraper {
+    text-align: center;
+}
+
+.watch-crop-list > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.webuploader-container div {
+    width: 77px !important;
+    height: 40px !important;
+    left: 0 !important;
+}
+
+.img-preview {
+    margin: 5px auto 10px auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.img-preview > img {
+    max-width: 100%;
+}
+
+.preview-lg {
+    width: 120px;
+    height: 120px;
+}
+
+.preview-sm {
+    width: 60px;
+    height: 60px;
+}
+
+#error-message {
+    font-size: 13px;
+    color: red;
+    vertical-align: middle;
+    margin-top: -10px;
+    display: inline-block;
+    height: 40px;
+}
+
+#template-modal .container {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+#template-modal .container .section {
+    position: relative;
+    margin: 0 15px;
+    padding-top: 60px;
+    float: left;
+    width: 150px;
+    height: 236px;
+    background: #fdfefe;
+    border: 1px solid #ddddd9;
+    text-align: center;
+}
+
+#template-modal .container .section>a {
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    top: -28px;
+    width: 56px;
+    height: 56px;
+    margin-left: -28px;
+}
+
+#template-modal .container .section>a .fa {
+    display: inline-block;
+    width: 56px;
+    height: 56px;
+    background-color: #fbfefe;
+    border: 1px solid #ddddd9;
+    border-radius: 50%;
+    line-height: 54px;
+    font-size: 24px;
+    color: #ddddd9;
+}
+
+.fa {
+    font-weight: 100 !important;
+}
+
+
+.markdown-body h1, h2, h3, h4, h5, h6 {
+    color: #333;
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 16px;
+    font-weight: 300;
+    line-height: 1.4;
+}
+
+#template-modal .container .section>h3 a {
+    font-size: 20px;
+    font-weight: 200;
+    text-decoration: none;
+    color: #5d606b;
+}
+
+#template-modal .container .section ul {
+    margin-top: 35px;
+    padding-left: 0;
+    list-style: none;
+}
+
+#template-modal .container .section ul li {
+    margin-bottom: 10px;
+    padding: 0 10px;
+    line-height: 1.2;
+    color: #8e8d8d;
 }
 
 /** 919 new  --  end  **/

@@ -5,6 +5,9 @@ namespace SmartWiki;
 use Illuminate\Database\Eloquent\Model;
 
 
+/**
+ * @property array|string editorContent
+ */
 class workLog extends ModelBase
 {
     protected $table = 'work_log';

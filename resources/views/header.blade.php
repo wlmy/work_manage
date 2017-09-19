@@ -19,9 +19,13 @@
     <![endif]-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{asset('static/scripts/jquery.min.js')}}"></script>
+
+    <link href="{{asset('static/webuploader/webuploader.css')}}" rel="stylesheet">
+    <link href="{{asset('static/cropper/cropper.css')}}" rel="stylesheet">
+    <script type="text/javascript" src="{{asset('/static/cropper/cropper.js')}}"></script>
+    <script type="text/javascript" src="{{asset('/static/webuploader/webuploader.js')}}"></script>
     @yield('styles')
 </head>
-
 <body>
 <div class="manual-reader">
     <header class="navbar navbar-static-top smart-nav navbar-fixed-top" role="banner" style="background-color: #5cb85c">
@@ -37,9 +41,8 @@
                             {{$member->account}}
                             <b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{route('account.logout')}}" title="退出登录">退出登录&nbsp;
-                                    <i class="fa fa-sign-out"></i>
+                        <ul class="dropdown-menu" style="min-width: 100px">
+                            <li><a href="{{route('account.logout')}}" title="退出登录">退出登录&nbsp;<i class="fa fa-sign-out"></i>
                                 </a></li>
                         </ul>
 
@@ -53,6 +56,7 @@
             <div class="page-left">
                 <ul class="menu">
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item"  ><i class="fa fa-clipboard"></i> 我的日报</a> </li>
+                    <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.other')}}" class="item"  ><i class="fa fa-clipboard"></i> 他人的日报</a> </li>
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"  ><i class="fa fa-th-list"></i> 日报统计</a> </li>
                     {{-- <li{!! (isset($member_index) ? ' class="active"' : '') !!}><a href="{{route('member.index')}}" class="item"><i class="fa fa-user"></i> 个人资料</a> </li>
                      <li{!! (isset($member_account) ? ' class="active"' : '') !!}><a href="{{route('member.account')}}" class="item"><i class="fa fa-lock"></i> 修改密码</a> </li>
@@ -72,6 +76,7 @@
         </div>
         <div class="clearfix"></div>
     </div>
+
 </div>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="{{asset('static/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>

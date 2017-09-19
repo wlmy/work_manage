@@ -20,7 +20,12 @@ Route::match(['get','post'],'/work/createOrUpdateData',[
 ])->name('workLog.createOrUpdateData');
 
 
-//看日志
+//日志统计
 Route::match(['get','post'],'/work/index',[
     'uses' => 'WorkLogController@index'
 ])->name('workLog.index');
+
+//他人的日报
+Route::match(['get','post'],'/work/other',[
+    'uses' => 'WorkLogController@other'
+])->name('workLog.other');

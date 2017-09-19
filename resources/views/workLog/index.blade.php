@@ -82,8 +82,8 @@
                 <tbody>
                 <tr>
                     <td style="width: 90px;">wulimin</td>
-                    <td>1</td>
-                    <td>1</td>
+                    <td><i class="fa fa-square-o"></i></td>
+                    <td><i class="fa fa-square"></i></td>
                     <td>1</td>
                     <td>1</td>
                     <td>1</td>
