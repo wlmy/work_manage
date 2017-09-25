@@ -13,20 +13,25 @@ use SmartWiki\workLog;
 class WorkLogController extends Controller
 {
 
+    /**
+     * 日志添加页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function add()
     {
         if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
             return redirect(route('account.login'));
         }
 
+        $member_id = $this->member_id;
         $start_time = $this->request->input('start_time');
         $end_time = $this->request->input('end_time');
         $nickname = $this->request->input('nickname');
         $page = max(intval($this->request->input('page', 1)), 1);
-        $select = workLog::select([
-            'work_log.*',
-            'member.account'
-        ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
+
+        $select = workLog::select(['work_log.*', 'member.account'])
+            ->leftJoin('member', 'member.member_id', '=', 'work_log.member_id')
+            ->where('member.member_id', $member_id);
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
         $this->data['logLists'] = $lists;
         $this->data['logSearchParams'] = array(
@@ -34,9 +39,14 @@ class WorkLogController extends Controller
             'start_time' => $start_time,
             'end_time' => $end_time
         );
+
         return view('workLog.add', $this->data);
     }
 
+    /**
+     * old createOrUpdate API
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createOrUpdateData_bak()
     {
         if ($this->isPost()) {
@@ -93,17 +103,21 @@ class WorkLogController extends Controller
     }
 
 
+    /**
+     * new createOrupdate API
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function createOrUpdateData()
     {
         if (empty($this->member_id)) {
             return redirect(route('account.login'));
         }
         if ($this->isPost()) {
-            $content = $this->request->input('test-editormd-markdown-doc', null);
+            $content = $this->request->input('editor_content', null);
             $result = workLog::query()
                 ->where('member_id', $this->member_id)
-                ->where('create_time', '>', '2017-09-19 00:00:00')
-                ->where('create_time', '<', '2017-09-19 23:59:59')
+                ->where('create_time', '>', date('Y-m-d'). ' 00:00:00')
+                ->where('create_time', '<', date('Y-m-d'). ' 23:59:59')
                 ->first();
             if (empty($result)) {
                 $workLog = new workLog();
@@ -126,6 +140,10 @@ class WorkLogController extends Controller
         return $this->jsonResult(0, ['url' => route('workLog.add')]);
     }
 
+    /**
+     * 编辑日志
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit()
     {
         $log_id = intval($this->request->input('id', 0));
@@ -141,6 +159,7 @@ class WorkLogController extends Controller
         }
         return view('workLog.edit', $this->data);
     }
+
 
     public function index()
     {
@@ -179,8 +198,43 @@ class WorkLogController extends Controller
         return view('workLog.index', $this->data);
     }
 
-    public function other(){
-        return view('workLog.index', $this->data);
+    /**
+     * 他人的日报
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function other()
+    {
+        if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
+            return redirect(route('account.login'));
+        }
+        $member_id = $this->member_id;
+        $start_time = $this->request->input('start_time');
+        $end_time = $this->request->input('end_time');
+        $nickname = $this->request->input('nickname');
+
+        $page = max(intval($this->request->input('page', 1)), 1);
+        $select = workLog::select([
+            'work_log.*',
+            'member.account'
+        ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
+        if (!empty($start_time)) {
+            $select->where('work_log.create_time', '>=', $start_time . '00:00:00');
+        }
+        if (!empty($end_time)) {
+            $select->where('work_log.create_time', '<=', $end_time . '23:59:59');
+        }
+        if (!empty($nickname)) {
+            $select->where('member.account', 'like', '%' . $nickname . '%');
+        }
+        $select->where('member.member_id', '!=', $member_id);
+        $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
+        $this->data['logLists'] = $lists;
+        $this->data['logSearchParams'] = array(
+            'nickname' => $nickname,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        );
+        return view('workLog.other', $this->data);
     }
 
     public function detail()
@@ -216,6 +270,15 @@ class WorkLogController extends Controller
             return $this->jsonResult(500);
         }
         return $this->jsonResult(0, ['state' => $workLog->state]);
+    }
+
+    /**
+     * 日志统计
+     * @return string
+     */
+    public function record()
+    {
+        return '';
     }
 
 

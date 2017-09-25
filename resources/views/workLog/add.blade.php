@@ -2,18 +2,85 @@
 @section('styles')
     <link rel="stylesheet" href="{{asset('static/editormd-log/css/editormd.css')}}"/>
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon"/>
-
     <link href="{{asset('static/styles/wiki.css')}}" rel="stylesheet">
-
     <link href="{{asset('static/webuploader/webuploader.css')}}" rel="stylesheet">
     <link href="{{asset('static/cropper/cropper.css')}}" rel="stylesheet">
-
+    <link href="{{asset('static/bootstrap-wysiwyg/css/index.css')}}" rel="stylesheet">
+    <link rel="apple-touch-icon" href="//mindmup.s3.amazonaws.com/lib/img/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="http://mindmup.s3.amazonaws.com/lib/img/favicon.ico" >
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 @endsection
 @section('scripts')
     <script type="text/javascript" src="{{asset('/static/cropper/cropper.js')}}"></script>
     <script type="text/javascript" src="{{asset('/static/webuploader/webuploader.js')}}"></script>
-
+    <script src="{{asset('static/bootstrap-wysiwyg/js/bootstrap-wysiwyg.js')}}"></script>
+    <script src="{{asset('static/bootstrap-wysiwyg/external/jquery.hotkeys.js')}}"></script>
     <script type="text/javascript">
+        $(function(){
+            function initToolbarBootstrapBindings() {
+                var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+                        'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+                        'Times New Roman', 'Verdana'],
+                    fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+                $.each(fonts, function (idx, fontName) {
+                    fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+                });
+                $('a[title]').tooltip({container:'body'});
+                $('.dropdown-menu input').click(function() {return false;})
+                    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+                    .keydown('esc', function () {this.value='';$(this).change();});
+
+                $('[data-role=magic-overlay]').each(function () {
+                    var overlay = $(this), target = $(overlay.data('target'));
+                    overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+                });
+                if ("onwebkitspeechchange"  in document.createElement("input")) {
+                    var editorOffset = $('#editor').offset();
+                    $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+                } else {
+                    $('#voiceBtn').hide();
+                }
+            };
+            function showErrorAlert (reason, detail) {
+                var msg='';
+                if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+                else {
+                    console.log("error uploading file", reason, detail);
+                }
+                $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+
+                    '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+            };
+            initToolbarBootstrapBindings();
+            $('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+            $('#editor').html("<?php echo 'eee'?>");
+            $('#editor1').html("<?php echo 'd'?>");
+            $('#add_save').on('click',function(){
+                $('#editor_content').val($('#editor').html());
+                $('#log_form').ajaxSubmit({
+                    success : function (res) {
+                        if(res.errcode == 0){
+                            window.location.href=res.data['url'];
+                        }else{
+                            showError(res.message);
+                        }
+                    }
+                });
+            });
+
+            function showError($msg) {
+                $("#error-message").addClass("error-message").removeClass("success-message").text($msg);
+                return false;
+            }
+
+            function showSuccess($msg) {
+                $("#error-message").addClass("success-message").removeClass("error-message").text($msg);
+                return true;
+            }
+
+        });
+
+
+
         $(function () {
             var modalHtml = $("#upload-logo-panel").find(".modal-body").html();
 
@@ -115,56 +182,105 @@
 
 @section('content')
     <div class="main-content">
-        <form method="post" action="{{route('workLog.createOrUpdateData')}}" id="form-editormd">
-        <div id="layout">
-            <div id="test-editormd">
-                <textarea style="display:none;">
-##### 成果和收获:
-- Emoji;
-- Task lists;
+        <form method="post" action="{{route('workLog.createOrUpdateData')}}" id="log_form">
+            <div style="height: 200px">
+                    <!-- editor-->
+                    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li><li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li><li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li><li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li><li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li><li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li><li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li><li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li><li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li><li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li><li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li><li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li><li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li><li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li><li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                                <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                                <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn" data-edit="bold" title="" data-original-title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                            <a class="btn" data-edit="italic" title="" data-original-title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                            <a class="btn" data-edit="strikethrough" title="" data-original-title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                            <a class="btn" data-edit="underline" title="" data-original-title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn" data-edit="insertunorderedlist" title="" data-original-title="Bullet list"><i class="icon-list-ul"></i></a>
+                            <a class="btn" data-edit="insertorderedlist" title="" data-original-title="Number list"><i class="icon-list-ol"></i></a>
+                            <a class="btn" data-edit="outdent" title="" data-original-title="Reduce indent (Shift+Tab)"><i class="icon-indent-left"></i></a>
+                            <a class="btn" data-edit="indent" title="" data-original-title="Indent (Tab)"><i class="icon-indent-right"></i></a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-info" data-edit="justifyleft" title="" data-original-title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                            <a class="btn" data-edit="justifycenter" title="" data-original-title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                            <a class="btn" data-edit="justifyright" title="" data-original-title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                            <a class="btn" data-edit="justifyfull" title="" data-original-title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" title="" data-original-title="Hyperlink"><i class="icon-link"></i></a>
+                            <div class="dropdown-menu input-append">
+                                <input class="span2" placeholder="URL" type="text" data-edit="createLink">
+                                <button class="btn" type="button">Add</button>
+                            </div>
+                            <a class="btn" data-edit="unlink" title="" data-original-title="Remove Hyperlink"><i class="icon-cut"></i></a>
 
-##### 错误和不足之处：
-    editor.md/
-    lib/
-    css/
-</textarea>
-            </div>
-        </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <a class="btn" title="" id="pictureBtn" data-original-title="Insert picture (or just drag &amp; drop)"><i class="icon-picture"></i></a>
+                            <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 41px; height: 30px;">
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn" data-edit="undo" title="" data-original-title="Undo (Ctrl/Cmd+Z)"><i class="icon-undo"></i></a>
+                            <a class="btn" data-edit="redo" title="" data-original-title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn" data-edit="save" id="add_save" title="" data-original-title="save (Ctrl+S)"><i class="fa fa-save"></i></a>
+                        </div>
+                        <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
+                    </div>
+                    <div id="editor" contenteditable="true"  style="height: 130px;width: 99%">
+                    </div>
+                    <div>
+                        <textarea type="text"  name="editor_content" id="editor_content" maxlength="20"  placeholder="" hidden></textarea>
+                    </div>
+                </div>
+
         </form>
+
+        @foreach($logLists as $key => $val)
         <div class="split">
-            <dt>今天</dt>
+            @if(substr($val['create_time'], 0, 10) == date('Y-m-d', time()))
+                <dt>今天</dt>
+            @elseif(substr($val['create_time'], 0, 10) == date('Y-m-d', strtotime("-1 day")))
+                <dt>昨天</dt>
+            @elseif(substr($val['create_time'], 0 ,10) == date('Y-m-d', strtotime("-2 day")))
+                <dt>前天</dt>
+            @else
+                <dt1>&nbsp;</dt1>
+            @endif
+
+
+
             <div class="list-container">
                 <div class="log-user">
                     <div class="name-content">
-                        <div class="log-user-name">wulimin</div>
-                        <div>坎坎坷坷扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩llllllllllllllllllllllll</div>
+                        <div class="log-user-name">{{$val['account']}}</div>
+                        <div style="margin-top: 10px">
+                            <div id="editor1" contenteditable="true"  style="height: 130px;width: 99%">
+                            </div>
+                            </div>
                     </div>
                 </div>
 
-                <div class="date">2017-05-25 12:20:23</div>
+                <div class="date">{{$val['create_time']}}</div>
                 <div class="btn-box">
                     <a href="/work/edit?id=2" class="log-alter">&nbsp;<i class="fa fa-pencil">&nbsp;</i></a>
                 </div>
             </div>
         </div>
-
-        <div class="split">
-            <dt>昨天</dt>
-            <div class="list-container">
-                <div class="log-user">
-                    <div class="name-content">
-                        <div class="log-user-name">wulimin</div>
-                        <div>坎坎坷坷扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩扩llllllllllllllllllllllll</div>
-                    </div>
-                </div>
-
-                <div class="date">2017-05-25 12:20:23</div>
-                <div class="btn-box">
-                    <a href="/work/edit?id=2" class="log-alter">&nbsp;<i class="fa fa-pencil">&nbsp;</i></a>
-                </div>
-            </div>
-        </div>
-
+        @endforeach
 
     </div>
     <div class="user-login-info">
@@ -263,138 +379,6 @@
             </div>
         </div>
     </div>
-    <script type="text/plain" id="template-normal">
-##SmartWiki是什么?
-一个文档储存系统。
-
-##SmartWiki有哪些功能？
-
--  项目管理
--  文档管理
--  用户管理
--  用户权限管理
--  项目加密
--  站点配置
-
-##有问题反馈
-在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
-
-* 邮件(longfei6671#163.com, 把#换成@)
-* QQ: 867311066
-* http://www.iminho.me
-
-##捐助开发者
-在兴趣的驱动下,写一个`免费`的东西，有欣喜，也还有汗水，希望你喜欢我的作品，同时也能支持一下。
-当然，有钱捧个钱场（右上角的爱心标志，支持支付宝捐助），没钱捧个人场，谢谢各位。
-
-##感激
-感谢以下的项目,排名不分先后
-
-- laravel 5.2
-- mysql 5.6
-- editor.md
-- bootstrap 3.2
-- jquery 库
-- layer 弹出层框架
-- webuploader 文件上传框架
-- Nprogress 库
-- jstree
-- font awesome 字体库
-- cropper 图片剪裁库
-
-##关于作者
-
-一个纯粹的PHPer.
-PS：PHP是世界上最好的语言，没有之一(逃
-</script>
-    <script type="text/plain" id="template-api">
-### 简要描述：
-
-- 用户登录接口
-
-### 请求域名:
-
-- http://xx.com
-
-### 请求URL:
-
-GET:/api/login
-
-POST:/api/login
-
-PUT:/api/login
-
-DELETE:/api/login
-
-TRACE:/api/login
-
-
-### 参数:
-
-|参数名|是否必须|类型|说明|
-|:----    |:---|:----- |-----   |
-|username |是  |string |用户名   |
-|password |是  |string | 密码    |
-
-### 返回示例:
-
-**正确时返回:**
-
-```
-  {
-    "errcode": 0,
-    "data": {
-      "uid": "1",
-      "account": "admin",
-      "nickname": "Minho",
-      "group_level": 0 ,
-      "create_time": "1436864169",
-      "last_login_time": "0",
-    }
-  }
-```
-
-**错误时返回:**
-
-
-```
-  {
-    "errcode": 500,
-    "errmsg": "invalid appid"
-  }
-```
-
-### 返回参数说明:
-
-|参数名|类型|说明|
-|:-----  |:-----|-----                           |
-|group_level |int   |用户组id，1：超级管理员；2：普通用户  |
-
-### 备注:
-
-- 更多返回错误代码请看首页的错误代码描述
-
-
-
-</script>
-    <script type="text/plain" id="template-code">
-### 数据库字典
-#### 用户表，储存用户信息
-
-|字段|类型|空|默认|注释|
-|:----    |:-------    |:--- |-- -|------      |
-|uid	  |int(10)     |否	|	 |	           |
-|username |varchar(20) |否	|    |	 用户名	|
-|password |varchar(50) |否   |    |	 密码		 |
-|name     |varchar(15) |是   |    |    昵称     |
-|reg_time |int(11)     |否   | 0  |   注册时间  |
-
-#### 备注：无
-
-
-
-</script>
-
 
 @endsection
 
