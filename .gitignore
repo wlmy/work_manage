@@ -6,3 +6,4 @@ composer.lock
 gulpfile.js
 phpunit.xml
 vendor
+database.php
