@@ -60,7 +60,7 @@
 @endsection
 @section('content')
     <div class="setting-box">
-        <form action="{{route("workLog.index")}}" id="form_search" method="post">
+        <form action="{{route("workLog.other")}}" id="form_search" method="post">
             <div class="search-form" style="margin-left: -10px">
                 <div class="search-list">
                   <p style="width: 86px">开始时间：</p>
@@ -99,14 +99,14 @@
             </div>
         </form>
 
-        @foreach($logLists as $key => $val)
+        <?php foreach($logLists as $key => $val){?>
             <div class="split">
                     <dt1>&nbsp;</dt1>
                     <div class="list-container">
                         <div class="log-user">
                             <div class="name-content">
                                 <div class="log-user-name">{{$val['account']}}</div>
-                                <div>{{$val['editorContent']}}</div>
+                                <div><?php echo markdown_converter($val['editorContent'])?></div>
                             </div>
                         </div>
 
@@ -116,7 +116,7 @@
                         </div>
                     </div>
             </div>
-        @endforeach
+        <?php }?>
 
 
         <div>

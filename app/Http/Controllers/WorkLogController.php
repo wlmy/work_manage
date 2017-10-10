@@ -33,7 +33,9 @@ class WorkLogController extends Controller
             ->leftJoin('member', 'member.member_id', '=', 'work_log.member_id')
             ->where('member.member_id', $member_id);
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
+
         $this->data['logLists'] = $lists;
+
         $this->data['logSearchParams'] = array(
             'nickname' => $nickname,
             'start_time' => $start_time,
@@ -113,7 +115,8 @@ class WorkLogController extends Controller
             return redirect(route('account.login'));
         }
         if ($this->isPost()) {
-            $content = $this->request->input('editor_content', null);
+            $content = $this->request->input('test-editormd-markdown-doc', null);
+
             $result = workLog::query()
                 ->where('member_id', $this->member_id)
                 ->where('create_time', '>', date('Y-m-d'). ' 00:00:00')
@@ -199,7 +202,7 @@ class WorkLogController extends Controller
     }
 
     /**
-     * 他人的日报
+     * 查看日报
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function other()
@@ -207,10 +210,11 @@ class WorkLogController extends Controller
         if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
             return redirect(route('account.login'));
         }
-        $member_id = $this->member_id;
+        //$member_id = $this->member_id;
         $start_time = $this->request->input('start_time');
         $end_time = $this->request->input('end_time');
-        $nickname = $this->request->input('nickname');
+        $nickname = $this->request->input('user_name');
+        
 
         $page = max(intval($this->request->input('page', 1)), 1);
         $select = workLog::select([
@@ -226,7 +230,7 @@ class WorkLogController extends Controller
         if (!empty($nickname)) {
             $select->where('member.account', 'like', '%' . $nickname . '%');
         }
-        $select->where('member.member_id', '!=', $member_id);
+        //$select->where('member.member_id', '!=', $member_id);
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
         $this->data['logLists'] = $lists;
         $this->data['logSearchParams'] = array(
