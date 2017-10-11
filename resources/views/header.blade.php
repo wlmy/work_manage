@@ -57,7 +57,7 @@
                 <ul class="menu">
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.add')}}" class="item"  ><i class="fa fa-clipboard"></i> 写日报</a> </li>
                     <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.other')}}" class="item"  ><i class="fa fa-clipboard"></i> 查看日报</a> </li>
-                    <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"  ><i class="fa fa-th-list"></i> 日报统计</a> </li>
+                   {{-- <li{!! (isset($member_users) ? ' class="active"' : '') !!}><a href="{{route('workLog.index')}}" class="item"  ><i class="fa fa-th-list"></i> 日报统计</a> </li>--}}
                     {{-- <li{!! (isset($member_index) ? ' class="active"' : '') !!}><a href="{{route('member.index')}}" class="item"><i class="fa fa-user"></i> 个人资料</a> </li>
                      <li{!! (isset($member_account) ? ' class="active"' : '') !!}><a href="{{route('member.account')}}" class="item"><i class="fa fa-lock"></i> 修改密码</a> </li>
                      <li{!! (isset($member_projects) ? ' class="active"' : '') !!}><a href="{{route('member.projects')}}" class="item"><i class="fa fa-sitemap"></i> 项目列表</a> </li>

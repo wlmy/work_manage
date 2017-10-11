@@ -13,13 +13,6 @@
     <script type="text/javascript" src="{{asset('/static/webuploader/webuploader.js')}}"></script>
     <script type="text/javascript">
 
-/*$(function () {
-    alert('s');
-    $("#editor1").html(<?php echo $logLists[0]['editorContent'];?>);
-});*/
-
-
-
         try {
             var uploader = WebUploader.create({
                 auto: false,
@@ -101,14 +94,12 @@
             <div id="test-editormd">
                    <textarea style="display:none;">
 ##### 成果和收获:
-  - Emoji;
- @@ -18,67 +128,361 @@
-      lib/
-      css/
+- s
+- e
 
-#####错误和不足之处:
-  - Emoji;
- @@ -18,67 +128,361 @@
+##### 错误和不足之处:
+- s
+- e
                    </textarea>
             </div>
         </div>
@@ -124,8 +115,8 @@
                              class="img-circle" alt="头像" style="max-width: 50px;max-height: 50px;" id="headimgurl">
                     </a>
                 </label><span style="margin-left: 12px">wulimin</span></div>
-            <div style="color: #999;font-size: 12px; margin-top: 10px"><label>最近登录：</label>2017-09-18 17:30</div>
-            <div style="color: #999;font-size: 12px;"><label>登录次数：</label>2</div>
+            <div style="color: #999;font-size: 12px; margin-top: 10px"><label>最后登录时间：</label>{{$member->last_login_time}}</div>
+            <div style="color: #999;font-size: 12px;"><label>最后登录ip：</label>{{$member->last_login_ip}}</div>
         </div>
     </div>
 

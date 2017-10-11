@@ -63,7 +63,7 @@
         <form action="{{route("workLog.other")}}" id="form_search" method="post">
             <div class="search-form" style="margin-left: -10px">
                 <div class="search-list">
-                  <p style="width: 86px">开始时间：</p>
+                    <p style="width: 86px">开始时间：</p>
                     <div class="input-group date form_date col-md-7" data-date="" data-date-format="yyyy-mm-dd"
                          data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                         <input class="form-control search-input" size="16" type="text"
@@ -100,26 +100,25 @@
         </form>
 
         <?php foreach($logLists as $key => $val){?>
-            <div class="split">
-                    <dt1>&nbsp;</dt1>
-                    <div class="list-container">
-                        <div class="log-user">
-                            <div class="name-content">
-                                <div class="log-user-name">{{$val['account']}}</div>
-                                <div><?php echo markdown_converter($val['editorContent'])?></div>
-                            </div>
-                        </div>
-
-                        <div class="date">{{$val['create_time']}}</div>
-                        <div class="btn-box">
-                            <a href="/work/edit?id=2" class="log-alter">&nbsp;<i class="fa fa-pencil">&nbsp;</i></a>
-                        </div>
+        <div class="split">
+            <dt1>&nbsp;</dt1>
+            <div class="list-container">
+                <div class="log-user">
+                    <div class="name-content">
+                        <div class="log-user-name">{{$val['account']}}</div>
+                        <div><?php echo markdown_converter($val['editorContent'])?></div>
                     </div>
+                </div>
+
+                <div class="date">{{$val['create_time']}}</div>
+                <div class="btn-box">
+                    <?php if($val['account'] == $member->account && substr($val['create_time'], 0 ,10) == date('Y-m-d')){?><a href="/work/edit?id={{$val['id']}}" class="log-alter">&nbsp;<i class="fa fa-pencil">&nbsp;</i></a> <?php }?>
+                </div>
             </div>
+        </div>
         <?php }?>
 
-
-        <div>
+        <div style="float: right">
             <nav>
                 {{$logLists->appends(['nickname' => $logSearchParams['nickname'],'start_time'=> $logSearchParams['start_time'],'end_time'=>$logSearchParams['end_time']])->render()}}
             </nav>

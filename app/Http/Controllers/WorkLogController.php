@@ -22,26 +22,6 @@ class WorkLogController extends Controller
         if (!wiki_config('ENABLE_ANONYMOUS', false) && empty($this->member)) {
             return redirect(route('account.login'));
         }
-
-        $member_id = $this->member_id;
-        $start_time = $this->request->input('start_time');
-        $end_time = $this->request->input('end_time');
-        $nickname = $this->request->input('nickname');
-        $page = max(intval($this->request->input('page', 1)), 1);
-
-        $select = workLog::select(['work_log.*', 'member.account'])
-            ->leftJoin('member', 'member.member_id', '=', 'work_log.member_id')
-            ->where('member.member_id', $member_id);
-        $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
-
-        $this->data['logLists'] = $lists;
-
-        $this->data['logSearchParams'] = array(
-            'nickname' => $nickname,
-            'start_time' => $start_time,
-            'end_time' => $end_time
-        );
-
         return view('workLog.add', $this->data);
     }
 
@@ -116,28 +96,35 @@ class WorkLogController extends Controller
         }
         if ($this->isPost()) {
             $content = $this->request->input('test-editormd-markdown-doc', null);
-
-            $result = workLog::query()
-                ->where('member_id', $this->member_id)
-                ->where('create_time', '>', date('Y-m-d'). ' 00:00:00')
-                ->where('create_time', '<', date('Y-m-d'). ' 23:59:59')
-                ->first();
-            if (empty($result)) {
-                $workLog = new workLog();
-                $workLog->editorContent = $content;
-                $workLog->create_time = date('Y:m:d H:i:s', time());
-                if ($workLog->save() == false) {
-                    return $this->jsonResult(500);
-                }
-            } else {
-                $data = [
-                    'editorContent' => $result->editorContent . $content,
-                    'update_time' => date('Y:m:d H:i:s', time()),
-                ];
-                if ($result->update($data) == false) {
-                    return $this->jsonResult(500);
+            $id = $this->request->input('id', null);
+            if ($id) { //编辑
+                workLog::query()->where('id', $id)->update(['editorContent' => $content]);
+                return $this->jsonResult(0, ['url' => route('workLog.other')]);
+            } else { //添加或当日更新
+                $result = workLog::query()
+                    ->where('member_id', $this->member_id)
+                    ->where('create_time', '>', date('Y-m-d') . ' 00:00:00')
+                    ->where('create_time', '<', date('Y-m-d') . ' 23:59:59')
+                    ->first();
+                if (empty($result)) {
+                    $workLog = new workLog();
+                    $workLog->member_id = $this->member_id;
+                    $workLog->editorContent = $content;
+                    $workLog->create_time = date('Y:m:d H:i:s', time());
+                    if ($workLog->save() == false) {
+                        return $this->jsonResult(500);
+                    }
+                } else {
+                    $data = [
+                        'editorContent' => $result->editorContent . $content,
+                        'update_time' => date('Y:m:d H:i:s', time()),
+                    ];
+                    if ($result->update($data) == false) {
+                        return $this->jsonResult(500);
+                    }
                 }
             }
+
         }
 
         return $this->jsonResult(0, ['url' => route('workLog.add')]);
@@ -179,9 +166,6 @@ class WorkLogController extends Controller
             'work_log.*',
             'member.account'
         ])->leftJoin('member', 'member.member_id', '=', 'work_log.member_id');
-        /* if (isset($group) && $group >= 0) {
-             $select->where('work_log.log_type', '=', $group);
-         }*/
         if (!empty($start_time)) {
             $select->where('work_log.create_time', '>=', $start_time . '00:00:00');
         }
@@ -214,7 +198,7 @@ class WorkLogController extends Controller
         $start_time = $this->request->input('start_time');
         $end_time = $this->request->input('end_time');
         $nickname = $this->request->input('user_name');
-        
+
 
         $page = max(intval($this->request->input('page', 1)), 1);
         $select = workLog::select([
@@ -233,6 +217,7 @@ class WorkLogController extends Controller
         //$select->where('member.member_id', '!=', $member_id);
         $lists = $select->orderBy('work_log.create_time', 'DESC')->paginate(10, '*', 'page', $page);
         $this->data['logLists'] = $lists;
+
         $this->data['logSearchParams'] = array(
             'nickname' => $nickname,
             'start_time' => $start_time,

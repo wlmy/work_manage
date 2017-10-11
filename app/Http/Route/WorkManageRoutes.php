@@ -1,6 +1,6 @@
 <?php
 
-//写日志
+//写日报
 Route::match(['get','post'],'/work/add',[
     'uses' => 'WorkLogController@add'
 ])->name('workLog.add');
@@ -25,7 +25,7 @@ Route::match(['get','post'],'/work/index',[
     'uses' => 'WorkLogController@index'
 ])->name('workLog.index');
 
-//他人的日报
+//查看日报
 Route::match(['get','post'],'/work/other',[
     'uses' => 'WorkLogController@other'
 ])->name('workLog.other');
