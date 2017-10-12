@@ -128,10 +128,6 @@
                 </div>
             </div>
         </form>
-
-
-
-
     </div>
     <div class="user-login-info">
         <div class="user-info">
@@ -141,8 +137,8 @@
                              class="img-circle" alt="头像" style="max-width: 50px;max-height: 50px;" id="headimgurl">
                     </a>
                 </label><span style="margin-left: 12px">wulimin</span></div>
-            <div style="color: #999;font-size: 12px; margin-top: 10px"><label>最近登录：</label>2017-09-18 17:30</div>
-            <div style="color: #999;font-size: 12px;"><label>登录次数：</label>2</div>
+            <div style="color: #999;font-size: 12px; margin-top: 10px"><label>最后登录时间：</label>{{$member->last_login_time}}</div>
+            <div style="color: #999;font-size: 12px;"><label>最后登录ip：</label>{{$member->last_login_ip}}</div>
         </div>
     </div>
 
@@ -186,49 +182,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="template-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="modal-title">请设置模板</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="section">
-                            <a data-type="normal" href="javascript:;"><i class="fa fa-file-o"></i></a>
-                            <h3><a data-type="normal" href="javascript:;">普通文档</a></h3>
-                            <ul>
-                                <li>默认类型</li>
-                                <li>简单的文本文档</li>
-                            </ul>
-                        </div>
-                        <div class="section">
-                            <a data-type="api" href="javascript:;"><i class="fa fa-file-code-o"></i></a>
-                            <h3><a data-type="normal" href="javascript:;">API文档</a></h3>
-                            <ul>
-                                <li>用于API文档速写</li>
-                                <li>支持代码高亮</li>
-                            </ul>
-                        </div>
-                        <div class="section">
-                            <a data-type="code" href="javascript:;"><i class="fa fa-book"></i></a>
 
-                            <h3><a data-type="code" href="javascript:;">数据字典</a></h3>
-                            <ul>
-                                <li>用于数据字典显示</li>
-                                <li>表格支持</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 @endsection
 
